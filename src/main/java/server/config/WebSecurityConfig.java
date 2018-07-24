@@ -104,7 +104,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // Un-secure H2 Database
                 .antMatchers("/database/**/**").permitAll()
-                .antMatchers("/auth/**/**").permitAll()
+                .antMatchers("/api/auth/**/**").permitAll()
                 .antMatchers("/api/**/**").authenticated();
 
         // Custom JWT based security filter
@@ -118,15 +118,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cacheControl();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","http://localhost:8080"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
 
 

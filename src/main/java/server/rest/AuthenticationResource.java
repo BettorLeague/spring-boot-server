@@ -45,10 +45,11 @@ public class AuthenticationResource {
     private AuthenticationManager authenticationManager;
 
     @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
+    public ResponseEntity<JwtAuthenticationResponse> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
         User user = this.userService.getUserByUsernameOrEmail(authenticationRequest.getUsername());
+
         if (isNull(user)){
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", authenticationRequest.getUsername()));
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         // Perform the security
         final Authentication authentication = authenticationManager.authenticate(
@@ -62,17 +63,17 @@ public class AuthenticationResource {
         final String token = jwtTokenUtil.generateToken(user);
 
         // Return the token
-        return ResponseEntity.ok(new JwtAuthenticationResponse(token));
+        return new ResponseEntity<>(new JwtAuthenticationResponse(token),HttpStatus.OK);
     }
 
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
-    public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
+    public ResponseEntity<JwtAuthenticationResponse> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String authToken = request.getHeader(tokenHeader);
-        if(authToken == null){
+        String username = jwtTokenUtil.getUsernameFromToken(authToken);
+        User user =  userService.getUserByUsernameOrEmail(username);
+        if(isNull(user)){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }else {
-            String username = jwtTokenUtil.getUsernameFromToken(authToken);
-            UserDetails user =  userService.loadUserByUsername(username);
             String refreshedToken = jwtTokenUtil.refreshToken(authToken);
             return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken));
         }
@@ -81,11 +82,12 @@ public class AuthenticationResource {
     @RequestMapping(value = "${jwt.route.authentication.current.user}", method = RequestMethod.GET)
     public ResponseEntity<?> getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
-        if (token == null) {
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        User user = userService.getUserByUsernameOrEmail(username);
+
+        if (isNull(user)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }else {
-            String username = jwtTokenUtil.getUsernameFromToken(token);
-            User user = userService.getUserByUsername(username);
             return new ResponseEntity<>(user,HttpStatus.OK);
         }
     }

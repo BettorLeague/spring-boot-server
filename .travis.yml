@@ -1,6 +1,30 @@
+sudo: required
+
+services:
+  - docker
+
 language: java
 jdk:
  - oraclejdk8
+
+
+env:
+  global:
+  - secure: "ppoOrcxiJNW81Df6K10MWYsgk38toy/LBmoeUcgHb7974rZzKTAmtrS1vvUQJ2QXyzOd91IrXX4jZByidRtj4Lq3di86gXHTxk+kM948LGlwPZRrB+G2fvLni9MSMRdrwpZA6xzOyFBWibzZF8VObMx+R+pO1bOBTGn48lm3zwVRUsRgo/iH2zE2xGxS0rnrUGYt+ptNkY+I0xt1ULSR5gCZid/wwfOJTqAi7rAksA0zZ5cLTLvH/d3ton17GBM5rHwPvJWyBj1CZXhzHbqY8buKCOCBCrnv/GMOxrpLbCDgQZGrpn2J5vLCsBGj0rj6znX6HnPX/1pW5uqgm7HGuFewdLkVR6TB7TLFfUHyklFGOzpbNpvgizwHUkXBfqODiH3aWD8QsEL59JF94SpNGMf/MDUxkVmng5XOwrOFp0uYddSIBsaGS4if9/nscxjOvAoZ1a6/REHD2HekBren/Ld4mF4eP4OVPEyFwXaXxRQAagVsf9rxQKAGXjFZdUYLQmNuLtUxvySAI0XqsI91Qu/UYcTVujNdODxU0q88AP2h9OZb5zClyDWrL/S/IZ6oxII02aJ1bNmyE1YwcahAo0L+8qaxPZHengZjhng72VGsapp2/nJgAkrABS6vzXrQ2X7TzoIibx0NQunx9cDnNrbMYm+Xqw0lJ2y5rEpwqO0=" # DOCKER_USER
+  - secure: "SrYQVnnJbbgZZznApZRRTcnJpsgT6pCH3RiUBCSsfvVCYiNym3U6OWUP78Qx9EqNGVWjQBT2638LuDbWVrui8b7kvYuOmR4rENGgsQjnVElEhrpzUA2KPJj7biz0dOUY2VoCJPX4PZ5+YU6dPktKql6yi3px8pdECDFInLImELQMnlJIuzYG21VdcvOnaiOTufkXuqzzOPZ+VP1eni/DVMyXWXDBEpF/NROmFSS+/hDTVFhvCB1mCGQWwMDBDL7QPjkFJO+9k30ba3NWgWnFTI0HI08MCyjMlu68R3Z4rFJEsE065XersGcP0i70wSfnYCZ6jmef6mhRYgVhCVGgXIEGCzObo+XhiV0jTngqDzYD6uR73PDTqzrJGknd3LlKKQthPGpPPq6Fb2Y1mfknYR96Sa83PGmcruhnHCZ1rOIdiL94rtImluxkxDDNjzVtmCdJ1ieD5qxLl9PsfVabEnejGedXfy/k3ck3pMVRL5HKIB7xbz4fjkdy1pKKi/UX9DoJFeAK3r6o81wGh9y3fFhr00t5X5uBREpKpJQn7ADZq6S3XIxr+KjSJWnLPQuP/SIaaFZ4+CDtfuUzLb27deH7rwcKfUM2DWA6MJsmG57rwSG1XPWQb8i5W2t2g7CcrHuhYo6Wd3T7Szvc0d3lQ56T01NMRDHLaFwbvzVAlz4=" # DOCKER_PASS
+  - secure: "bew1qaBX8KVEwvOFcbld0nWv8Jsl1Nxpm+ln3vy4KbpuTdAjHM/sOx5Bo+27irDR7Ox7gcRXBlZkXX42zFmLHVNjw8VwR2Tx5dtedOSaDgoEmriTR8J/2kZRK2aqADWEKS7u/jZDvR5CYlVA76ysuyh7MK6mvCYz4WCemjSTf9UHBFoC5Yp7aNpkEv9442VgMxnzno78kYF0q3ta4BC81Qyjo8YaslKRxKUwyjFpaH/G9t1zfdO3iQEX94eYqYTzNQfAxeV7DeN0M7Po0w4N2UDR3z2Txf/oLQGpXlW1I9ao28TxWh/GLbQ2dGnsTMuELmoSalS/vb58AjhbqhGKQvNoEFEiXdXBf//gegclgsyW45RBpk6WgFQqz4smxkIlgcy8u4Wn/MB0rJlhZRD8WdmPG9uAgv/1o0s6UdCR6DISFiXcMB5unbzkBRKN0uK53yj9o+9bwV76xAMrT5tBEBGhEIOm7MNPqV0oDXBsx8gbaRJ++cffJWYHawnK+lNRhtyefXq1jbWHvDN3gRVn9nisAOEAyLHFhDmveFtIDfwTZMD33bxHvqMxa/pE/huvbvqEeM5PZ+tbaU/D4OQ0InEe+dhJIMmzLxxoQvuNrVpwgJRV251CaenN9pr8jIxqHl7sJ2qsry7UmEYkNLVgaG7VuqBXxGumUpcOi2QZ7FE=" # DOCKER_EMAIL
+
+script:
+  - ./mvnw clean install -B
+
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+  - export IMAGE_NAME=nadjim/bettor-league-api
+  - docker build -t $IMAGE_NAME:$COMMIT .
+  - docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+  - docker push $IMAGE_NAME
+
 deploy:
  provider: heroku
  api-key:

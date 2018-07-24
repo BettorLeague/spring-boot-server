@@ -1,0 +1,25 @@
+version: "3"
+services:
+  phpmyadmin:
+     image: phpmyadmin/phpmyadmin
+     ports :
+      - 8090:80
+     environment:
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+     links:
+      - database:db
+  database:
+    image: mysql
+    ports:
+     - 3306:3306
+    volumes:
+     - ./database:/var/lib/mysql
+    environment:
+       - MYSQL_ROOT_PASSWORD=root
+       - MYSQL_DATABASE=mydb
+  bettor-league-api:
+    image: nadjim/bettor-league-api
+    restart: always
+    ports:
+      - 8080:8080
