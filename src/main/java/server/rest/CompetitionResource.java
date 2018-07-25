@@ -1,12 +1,12 @@
 package server.rest;
-
+/*
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import server.batch.UpdateResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import server.model.football.Competition;
-import server.model.football.Fixture;
-import server.model.football.LeagueTable;
 import server.model.football.Team;
 import server.service.impl.CompetitionServiceImpl;
 
@@ -18,21 +18,6 @@ public class CompetitionResource {
 
     @Inject
     private CompetitionServiceImpl competitionService;
-
-    @Inject
-    private UpdateResult updateResult;
-
-    @RequestMapping(path = "/api/competition/update", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateAllCompetition() {
-        this.updateResult.updateAllChampionat();
-    }
-
-    @RequestMapping(path = "/api/competition/update/{footballDataCompeitionId}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateCompetitionByFootballDataId(@PathVariable("footballDataCompeitionId") String footballDataCompeitionId) {
-        this.updateResult.updateChampionant(footballDataCompeitionId);
-    }
 
 
     @RequestMapping(path = "/api/competition", method = RequestMethod.GET)
@@ -99,4 +84,4 @@ public class CompetitionResource {
 
 
 
-}
+}*/

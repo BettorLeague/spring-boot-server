@@ -1,5 +1,5 @@
 package server.rest;
-
+/*
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,23 +50,6 @@ public class AdminResource {
         return this.adminResourceDelegate.getAllAuthority();
     }
 
-    @RequestMapping(path = "/api/admin/contest", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Contest> addContest(@RequestBody Contest contest) {
-        return adminResourceDelegate.addContest(contest);
-    }
-
-    @RequestMapping(path = "/api/admin/contest/{contestId}", method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Contest> deleteContest(@PathVariable("contestId") Long contestId) {
-        return adminResourceDelegate.deleteContest(contestId);
-    }
-
-    @RequestMapping(path = "/api/admin/contest/{contestId}/players/{userId}", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Player> addPlayerByUserId(@PathVariable("contestId") Long contestId, @PathVariable("userId") Long userId) {
-        return adminResourceDelegate.addPlayerByUserId(contestId,userId);
-    }
 
     @RequestMapping(path = "/api/admin/contest/{contestId}/players/{playerId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -74,4 +57,4 @@ public class AdminResource {
         return adminResourceDelegate.deletePlayerFromContest(contestId,playerId);
     }
 
-}
+}*/

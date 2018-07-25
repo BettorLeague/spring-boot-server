@@ -1,37 +1,22 @@
 package server.security;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.DefaultClock;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import server.model.user.User;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil implements Serializable {
 
-    private static final long serialVersionUID = -3301605591108950415L;
-
-    static final String CLAIM_KEY_USERNAME = "sub";
-    static final String CLAIM_KEY_AUDIENCE = "aud";
-    static final String CLAIM_KEY_CREATED = "iat";
-
-    static final String AUDIENCE_UNKNOWN = "unknown";
-    static final String AUDIENCE_WEB = "web";
-    static final String AUDIENCE_MOBILE = "mobile";
-    static final String AUDIENCE_TABLET = "tablet";
-
-    @SuppressFBWarnings(value = "SE_BAD_FIELD", justification = "It's okay here")
-    private Clock clock = DefaultClock.INSTANCE;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -39,20 +24,13 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.expiration}")
     private Long expiration;
 
+
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    public Date getIssuedAtDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getIssuedAt);
-    }
-
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
-    }
-
-    public String getAudienceFromToken(String token) {
-        return getClaimFromToken(token, Claims::getAudience);
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
@@ -69,81 +47,27 @@ public class JwtTokenUtil implements Serializable {
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(clock.now());
+        return expiration.before(new Date());
     }
 
-    private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-        return (lastPasswordReset != null && created.before(lastPasswordReset));
-    }
-/*
-    private String generateAudience(Device device) {
-        String audience = AUDIENCE_UNKNOWN;
-        if (device.isNormal()) {
-            audience = AUDIENCE_WEB;
-        } else if (device.isTablet()) {
-            audience = AUDIENCE_TABLET;
-        } else if (device.isMobile()) {
-            audience = AUDIENCE_MOBILE;
-        }
-        return audience;
-    }*/
-
-    private Boolean ignoreTokenExpiration(String token) {
-        String audience = getAudienceFromToken(token);
-        return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
-    }
-
-    public String generateToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, user.getUsername());
-    }
-
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
-        final Date createdDate = clock.now();
-        final Date expirationDate = calculateExpirationDate(createdDate);
-
-        System.out.println("doGenerateToken " + createdDate);
-
+    public String generateToken(Authentication authentication) {
+        final String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(createdDate)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .setSubject(authentication.getName())
+                .claim("scopes", authorities)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration*1000))
                 .compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = getIssuedAtDateFromToken(token);
-        return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
-                && (!isTokenExpired(token) || ignoreTokenExpiration(token));
-    }
-
-    public String refreshToken(String token) {
-        final Date createdDate = clock.now();
-        final Date expirationDate = calculateExpirationDate(createdDate);
-
-        final Claims claims = getAllClaimsFromToken(token);
-        claims.setIssuedAt(createdDate);
-        claims.setExpiration(expirationDate);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
-    }
 
     public Boolean validateToken(String token, User user) {
         final String username = getUsernameFromToken(token);
-        final Date created = getIssuedAtDateFromToken(token);
-        //final Date expiration = getExpirationDateFromToken(token);
-        return (
-              username.equals(user.getUsername())
-                    && !isTokenExpired(token)
-        );
+        return (username.equals(user.getUsername()) && !isTokenExpired(token));
     }
 
-    private Date calculateExpirationDate(Date createdDate) {
-        return new Date(createdDate.getTime() + expiration * 1000);
-    }
+
 }

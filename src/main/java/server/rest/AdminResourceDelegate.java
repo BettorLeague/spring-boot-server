@@ -31,7 +31,7 @@ public class AdminResourceDelegate {
     }
 
     public ResponseEntity<User> deleteUser(Long userId){
-        if(this.userService.existUser(userId)){
+        if(this.userService.existUserById(userId)){
             return new ResponseEntity<>(this.userService.deleteUser(userId),HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -39,7 +39,7 @@ public class AdminResourceDelegate {
     }
 
     public ResponseEntity<User> addUser(User user){
-        if(this.userService.existUser(user.getId())){
+        if(this.userService.existUserById(user.getId())){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }else {
             return new ResponseEntity<>(this.userService.addUser(user),HttpStatus.OK);
@@ -47,7 +47,7 @@ public class AdminResourceDelegate {
     }
 
     public ResponseEntity<User> getUserById(Long userId){
-        if(this.userService.existUser(userId)){
+        if(this.userService.existUserById(userId)){
             return new ResponseEntity<>(this.userService.getUser(userId),HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

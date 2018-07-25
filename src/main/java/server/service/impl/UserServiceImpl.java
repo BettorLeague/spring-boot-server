@@ -11,7 +11,7 @@ import server.model.user.User;
 import server.repository.user.AuthorityRepository;
 import server.repository.user.UserRepository;
 import server.model.user.Authority;
-import server.dto.authentification.JwtSignupRequest;
+import server.dto.authentification.SignupRequest;
 import server.repository.football.TeamRepository;
 import server.service.UserService;
 
@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.teamRepository = teamRepository;
     }
 
-
-    public boolean existUser(Long userId){
+    public boolean existUser(User user){ return this.userRepository.exists(user.getId()); }
+    public boolean existUserById(Long userId){
         return this.userRepository.exists(userId);
     }
     public boolean existUserByUsername(String username){
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    public User signUp(JwtSignupRequest jwtSignupRequest){
+    public User signUp(SignupRequest jwtSignupRequest){
         User user = new User();
         user.setUsername(jwtSignupRequest.getUsername());
         user.setPassword(this.passwordEncoder.encode(jwtSignupRequest.getPassword()));

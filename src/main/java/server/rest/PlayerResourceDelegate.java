@@ -1,5 +1,5 @@
 package server.rest;
-
+/*
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,3 +59,4 @@ public class PlayerResourceDelegate {
         }
     }
 }
+*/

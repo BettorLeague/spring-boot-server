@@ -1,5 +1,5 @@
 package server.rest;
-
+/*
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,3 +49,4 @@ public class ContestResourceDelegate {
         }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
+*/

@@ -1,5 +1,5 @@
 package server.rest;
-
+/*
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,3 +32,4 @@ public class PlayerResource {
         return playerResourceDelegate.upadtePronostic(pronostics,contestId,request);
     }
 }
+*/

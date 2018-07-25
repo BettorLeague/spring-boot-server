@@ -1,5 +1,6 @@
 package server.repository.football;
 
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import server.model.football.Team;
 

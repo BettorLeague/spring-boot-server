@@ -68,10 +68,7 @@ public class User  {
     @Enumerated(EnumType.STRING)
     private UserSex sex;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "FAVORITE_TEAM",
-            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "TEAM_ID", referencedColumnName = "ID")})
+    @OneToOne(fetch = FetchType.LAZY)
     private Team favoriteTeam;
 
     @Column(name = "QUOTE")

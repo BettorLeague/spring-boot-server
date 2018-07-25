@@ -1,7 +1,7 @@
 package server.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import server.dto.authentification.JwtSignupRequest;
+import server.dto.authentification.SignupRequest;
 import server.dto.user.UpdateUserInfoRequest;
 import server.model.user.Authority;
 import server.model.user.User;
@@ -16,7 +16,8 @@ public interface UserService {
     User updateUserInfo(User user, UpdateUserInfoRequest userInfoRequest);
     User deleteUser(Long id);
 
-    boolean existUser(Long userId);
+    boolean existUser(User user);
+    boolean existUserById(Long userId);
     boolean existUserByUsername(String username);
     boolean existUserByEmail(String email);
 
@@ -27,5 +28,5 @@ public interface UserService {
     List<Authority> getAllAuthority();
 
     UserDetails loadUserByUsername(String username);
-    User signUp(JwtSignupRequest jwtSignupRequest);
+    User signUp(SignupRequest jwtSignupRequest);
 }

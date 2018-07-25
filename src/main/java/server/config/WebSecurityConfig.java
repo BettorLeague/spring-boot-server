@@ -15,16 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.social.connect.ConnectionFactoryLocator;
-import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import server.social.SocialConnectionSignup;
 import server.security.JwtAuthenticationEntryPoint;
 import server.security.JwtAuthenticationTokenFilter;
-
-import java.util.Arrays;
 
 @SuppressWarnings("SpringJavaAutowiringInspection")
 @Configuration
@@ -37,15 +29,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
-
-    @Autowired
-    private ConnectionFactoryLocator connectionFactoryLocator;
-
-    @Autowired
-    private UsersConnectionRepository usersConnectionRepository;
-
-    @Autowired
-    private SocialConnectionSignup facebookConnectionSignup;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -85,15 +68,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // allow anonymous resource requests
                 .antMatchers(
                         HttpMethod.GET,
-                        "/",
-                        "/assets/**/**",
-                        "/assets/i18n/English.json",
-                        "/assets/i18n/French.json",
-                        "/*.html",
-                        "/favicon.ico",
-                        "/**/*.html",
-                        "/**/*.css",
-                        "/**/*.js",
                         "/v2/api-docs",
                         "/swagger-resources/configuration/ui",
                         "/swagger-resources/**/**",
@@ -104,7 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // Un-secure H2 Database
                 .antMatchers("/database/**/**").permitAll()
+                // Un-secure Login call
                 .antMatchers("/api/auth/**/**").permitAll()
+                // Secure all
                 .antMatchers("/api/**/**").authenticated();
 
         // Custom JWT based security filter

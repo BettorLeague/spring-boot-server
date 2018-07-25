@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.social.connect.Connection;
@@ -42,6 +43,7 @@ public class SocialSignInAdapter implements SignInAdapter {
         final UserProfile userProfile = connection.fetchUserProfile();
 
         User user = this.userService.getUserByUsernameOrEmail(localUserId);
+
         if (isNull(user)){
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", localUserId));
         }
@@ -49,12 +51,18 @@ public class SocialSignInAdapter implements SignInAdapter {
         log.info("Existing person: {} Signin by email: {}", localUserId, userProfile.getEmail());
 
 
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(user.getEmail(), null));
+        // Perform the security
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getEmail(),
+                        null
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
 
         HttpServletResponse response = request.getNativeResponse(HttpServletResponse.class);
-        final String token = jwtTokenUtil.generateToken(user);
+        final String token = jwtTokenUtil.generateToken(authentication);
 
         Cookie authCookie = new Cookie("Authorization", token);
         authCookie.setPath( "/" );

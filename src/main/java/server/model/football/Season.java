@@ -3,26 +3,23 @@ package server.model.football;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
-public class Standing {
+public class Season{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private String stage;
+    private String startDate;
 
     @Column
-    private String type;
+    private String endDate;
 
     @Column
-    private String groupe;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Table> table;
+    private Long currentMatchday;
 
     @OneToOne(fetch = FetchType.LAZY)
     private Competition competition;

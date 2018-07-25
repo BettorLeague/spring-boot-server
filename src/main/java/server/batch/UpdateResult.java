@@ -1,12 +1,10 @@
 package server.batch;
-
+/*
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import server.dto.football.FixtureRequest;
-import server.dto.football.TeamRequest;
 import server.model.football.Competition;
 import server.model.football.Fixture;
 import server.model.football.LeagueTable;
@@ -41,7 +39,7 @@ public class UpdateResult {
         restTemplate.getInterceptors().add(new RestTemplateInterceptor());
         updateCompetition(restTemplate,id);
     }
-/*
+
     @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")
     public void updateAllChampionat(){
         RestTemplate restTemplate = new RestTemplate();
@@ -59,7 +57,7 @@ public class UpdateResult {
         restTemplate.getInterceptors().add(new RestTemplateInterceptor());
         updateCompetition(restTemplate,"450");
     }
-*/
+
 
     @Scheduled(fixedRate = 1000 * 60 * 60 )
     public void updateAllChampionat(){
@@ -178,4 +176,4 @@ public class UpdateResult {
 
 
 
-}
+}*/

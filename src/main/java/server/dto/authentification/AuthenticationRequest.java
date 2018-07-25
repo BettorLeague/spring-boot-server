@@ -6,9 +6,12 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JwtAuthenticationResponse {
-    private String token;
+public class AuthenticationRequest {
+    private String username;
+    private String password;
 }
