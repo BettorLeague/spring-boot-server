@@ -16,6 +16,8 @@ public interface UserService {
     User updateUserInfo(User user, UpdateUserInfoRequest userInfoRequest);
     User deleteUser(Long id);
 
+    User addAdminAccount();
+
     boolean existUser(User user);
     boolean existUserById(Long userId);
     boolean existUserByUsername(String username);

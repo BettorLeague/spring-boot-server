@@ -112,6 +112,42 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User addAdminAccount(){
+        User admin = new User();
+        admin.setEmail("c.nadjim@gmail.com");
+        admin.setUsername("admin");
+        admin.setEnabled(true);
+        admin.setAuthorities(new ArrayList<>());
+        admin.setPassword(this.passwordEncoder.encode("admin"));
+
+        Authority adminAuthority = new Authority();
+        Authority userAuthority = new Authority();
+
+        if(! authorityRepository.existsByName(AuthorityName.ROLE_ADMIN)){
+            adminAuthority.setName(AuthorityName.ROLE_ADMIN);
+            adminAuthority.setUsers(new ArrayList<>());
+            adminAuthority.getUsers().add(admin);
+        }
+
+        if(! authorityRepository.existsByName(AuthorityName.ROLE_USER)){
+            userAuthority.setName(AuthorityName.ROLE_USER);
+            userAuthority.setUsers(new ArrayList<>());
+            userAuthority.getUsers().add(admin);
+        }
+
+        if(! userRepository.existsByUsername(admin.getUsername())){
+            admin.getAuthorities().add(userAuthority);
+            admin.getAuthorities().add(adminAuthority);
+            admin = userRepository.save(admin);
+            return admin;
+        }
+
+        return null;
+
+
+
+    }
+
 
 
 

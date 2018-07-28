@@ -6,4 +6,5 @@ import server.model.user.AuthorityName;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {
     Authority findByName(AuthorityName name);
+    boolean existsByName(AuthorityName name);
 }
