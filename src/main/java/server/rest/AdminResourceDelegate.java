@@ -1,5 +1,5 @@
 package server.rest;
-
+/*
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -74,3 +74,4 @@ public class AdminResourceDelegate {
         return new ResponseEntity<>(this.contestService.deletePlayerFromContest(contestId,playerId),HttpStatus.NOT_FOUND);
     }
 }
+*/

@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import server.model.football.Competition;
+import server.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -27,18 +29,16 @@ public class Contest {
     @NotNull
     private String caption;
 
-    @Column(name = "OWNER_ID")
-    @NotNull
-    private Long ownerId;
+    @OneToOne
+    private User user;
 
     @Column(name = "TYPE", length = 50)
     @NotNull
     @Enumerated(EnumType.STRING)
     private ContestType type;
 
-    @Column(name = "COMPETITION_ID")
-    @NotNull
-    private Long competitionId;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Competition competition;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = CascadeType.ALL)

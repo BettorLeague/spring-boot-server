@@ -1,5 +1,5 @@
 package server.service.impl;
-
+/*
 import org.springframework.stereotype.Service;
 import server.model.bettor.Player;
 import server.repository.bettor.PlayerRepository;
@@ -28,3 +28,4 @@ public class PlayerServiceImpl implements PlayerService{
          return this.playerRepository.findByUserIdAndContestId(userId,contestId);
     }
 }
+*/

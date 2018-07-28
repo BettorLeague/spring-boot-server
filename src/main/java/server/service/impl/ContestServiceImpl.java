@@ -1,5 +1,5 @@
 package server.service.impl;
-
+/*
 import org.springframework.stereotype.Service;
 import server.model.bettor.Message;
 import server.model.user.User;
@@ -121,3 +121,4 @@ public class ContestServiceImpl implements ContestService {
     }
 
 }
+*/

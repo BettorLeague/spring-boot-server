@@ -3,6 +3,7 @@ package server.model.bettor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import server.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,9 +21,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USER_ID")
+    @OneToOne
     @NotNull
-    private Long userId;
+    private User user;
 
     @Column(name = "DATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -30,6 +31,5 @@ public class Message {
 
     @Column(name = "CONTENT")
     private String content;
-
 
 }

@@ -80,6 +80,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/database/**/**").permitAll()
                 // Un-secure Login call
                 .antMatchers("/api/auth/**/**").permitAll()
+                // Un-secure Competition List
+                .antMatchers("/api/competition").permitAll()
                 // Secure all
                 .antMatchers("/api/**/**").authenticated();
 

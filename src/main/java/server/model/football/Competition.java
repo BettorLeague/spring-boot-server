@@ -1,21 +1,24 @@
 package server.model.football;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode(exclude={"seasons","currentSeason","standings","teams","matches"})
 public class Competition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private Area area;
 
     @Column(unique = true)
     private String name;
@@ -23,21 +26,34 @@ public class Competition {
     @Column
     private String code;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private Season currentSeason;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Season> seasons;
+    @Column
+    private String logo;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Team> teams;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Area area;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Standing> standings;
+    @OneToOne(fetch = FetchType.LAZY)
+    private Season currentSeason;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Match> matches;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "competition")
+    private Set<Season> seasons = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "competition_teams",
+            joinColumns = { @JoinColumn(name = "competition_id") },
+            inverseJoinColumns = { @JoinColumn(name = "team_id") })
+    @JsonIgnore
+    private Set<Team> teams = new HashSet<>();
+
+    @OneToMany(mappedBy="competition",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Standing> standings = new HashSet<>();
+
+    @OneToMany(mappedBy="competition",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Match> matches = new HashSet<>();
+
 }

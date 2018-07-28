@@ -1,6 +1,9 @@
 package server.model.football;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,13 +12,15 @@ import java.util.List;
 
 @Data
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode(exclude={"season","score","competition"})
 public class Match {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Season season;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,21 +38,19 @@ public class Match {
     @Column
     private String groupe;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Team homeTeam;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Team awayTeam;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
     private Score score;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Referee> referees;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
     private Competition competition;
 }

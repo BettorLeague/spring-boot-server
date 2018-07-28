@@ -3,6 +3,7 @@ package server.model.bettor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import server.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,19 +21,13 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USER_ID")
-    @NotNull
-    private Long userId;
+    @OneToOne
+    private User user;
 
-    @Column(name = "USERNAME")
-    @NotNull
-    private String username;
+    @OneToOne
+    private Contest contest;
 
-    @Column(name = "CONTEST_ID")
-    @NotNull
-    private Long contestId;
-
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "PLAYER_PRONOSTIC",
             joinColumns = {@JoinColumn(name = "PLAYER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "PRONOSTIC_ID", referencedColumnName = "ID")})

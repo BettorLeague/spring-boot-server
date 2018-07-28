@@ -3,6 +3,8 @@ package server.model.bettor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import server.model.football.Match;
+import server.model.football.Score;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,17 +21,14 @@ public class Pronostic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "FIXTURE_ID",unique = true)
-    @NotNull
-    private Long fixtureId;
+    @OneToOne
+    private Match match;
 
     @Column(name = "GOALS_AWAY_TEAM")
     private int goalsAwayTeam;
 
     @Column(name = "GOALS_HOME_TEAM")
     private int goalsHomeTeam;
-
-
 
 
 }
