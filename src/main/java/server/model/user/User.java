@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "USER")
+@Table(name = "APP_USER")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
