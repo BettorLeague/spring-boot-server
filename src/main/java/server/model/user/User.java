@@ -51,8 +51,8 @@ public class User  {
     private Boolean enabled;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+    @JoinTable(name = "APP_USER_AUTHORITY",
+            joinColumns = {@JoinColumn(name = "APP_USER_ID", referencedColumnName = "ID")},
             inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
     private List<Authority> authorities;
 
