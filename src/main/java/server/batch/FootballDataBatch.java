@@ -126,12 +126,12 @@ public class FootballDataBatch {
 
 
         for(Standing standing: standingsdto){
-            Set<Table> tablesbuffer = standing.getTable();
+            Set<StandingTable> tablesbuffer = standing.getTable();
             standing.setId(null);
             standing.setTable(new HashSet<>());
             standing.setCompetition(savedCompetition);
 
-            for(Table table: tablesbuffer){
+            for(StandingTable table: tablesbuffer){
                 table.setTeam(getTeamFromName(savedCompetition.getTeams(),table.getTeam().getName()));
                 table.setId(null);
                 table.setStanding(standing);

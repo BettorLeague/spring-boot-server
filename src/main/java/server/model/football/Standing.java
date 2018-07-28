@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -33,7 +32,7 @@ public class Standing {
     private String groupe;
 
     @OneToMany(mappedBy="standing",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Table> table = new HashSet<>();
+    private Set<StandingTable> table = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

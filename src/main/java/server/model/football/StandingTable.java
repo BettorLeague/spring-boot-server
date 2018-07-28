@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Table {
+public class StandingTable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
