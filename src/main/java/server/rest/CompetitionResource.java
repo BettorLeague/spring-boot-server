@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import server.batch.FootballDataBatch;
 import server.model.football.Competition;
 import server.model.football.Match;
 import server.model.football.Standing;
@@ -20,8 +21,10 @@ import java.util.Set;
 public class CompetitionResource {
 
     private final CompetitionResourceDelegate competitionResourceDelegate;
+    private final FootballDataBatch footballDataBatch;
 
-    public CompetitionResource(CompetitionResourceDelegate competitionResourceDelegate){
+    public CompetitionResource(CompetitionResourceDelegate competitionResourceDelegate, FootballDataBatch footballDataBatch){
+        this.footballDataBatch = footballDataBatch;
         this.competitionResourceDelegate = competitionResourceDelegate;
     }
 
@@ -43,6 +46,12 @@ public class CompetitionResource {
     @RequestMapping(path = "/api/competition/{competitionId}/standings", method = RequestMethod.GET)
     public ResponseEntity<Set<Standing>> getAllStandingsOfCompetition(@PathVariable("competitionId") Long competitionId) {
         return this.competitionResourceDelegate.getAllStandingsOfCompetition(competitionId);
+    }
+
+    @RequestMapping(path = "/api/competition", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void updateAllCompetition() {
+        this.footballDataBatch.feedingJob();
     }
 
 }
