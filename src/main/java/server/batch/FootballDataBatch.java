@@ -55,7 +55,8 @@ public class FootballDataBatch {
         this.restTemplate.getInterceptors().add(new RestTemplateInterceptor());
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
+    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")
+    //@Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
     public void feedingJob(){
         log.warn("Feeding job start");
         updateCompetitionByFootballDataId("2015");
