@@ -1,5 +1,6 @@
 package server.model.bettor;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,14 +11,14 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "MESSAGE")
+@Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
 
     @Id
-    @Column(name = "ID")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,11 +26,15 @@ public class Message {
     @NotNull
     private User user;
 
-    @Column(name = "DATE")
+    @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @Column(name = "CONTENT")
+    @Column
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Contest contest;
 
 }

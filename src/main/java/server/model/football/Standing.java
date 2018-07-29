@@ -28,8 +28,8 @@ public class Standing {
     @Enumerated(EnumType.STRING)
     private StandingType type;
 
-    @Column
-    private String groupe;
+    @Column(name = "GROUPE")
+    private String group;
 
     @OneToMany(mappedBy="standing",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<StandingTable> table = new HashSet<>();

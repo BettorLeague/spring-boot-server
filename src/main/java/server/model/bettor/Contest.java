@@ -11,7 +11,9 @@ import server.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "CONTEST")
@@ -29,31 +31,28 @@ public class Contest {
     @NotNull
     private String caption;
 
-    @OneToOne
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User owner;
 
     @Column(name = "TYPE", length = 50)
     @NotNull
     @Enumerated(EnumType.STRING)
     private ContestType type;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Competition competition;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "CONTEST_PLAYER",
+    @JoinTable(name = "CONTEST_USER",
             joinColumns = {@JoinColumn(name = "CONTEST_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "PLAYER_ID", referencedColumnName = "ID")})
+            inverseJoinColumns = {@JoinColumn(name = "APP_USER_ID", referencedColumnName = "ID")})
     @JsonIgnore
-    private List<Player> players;
+    private Set<Player> players = new HashSet<>();
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "CONTEST_MESSAGE",
-            joinColumns = {@JoinColumn(name = "CONTEST_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "MESSAGE_ID", referencedColumnName = "ID")})
-    private List<Message> messages;
+    @OneToMany(mappedBy="contest",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Message> messages = new HashSet<>();
 
 
 

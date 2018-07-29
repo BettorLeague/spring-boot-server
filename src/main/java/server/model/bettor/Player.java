@@ -7,31 +7,32 @@ import server.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "PLAYER")
+@Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Player {
 
     @Id
-    @Column(name = "ID")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
+    @NotNull
     private User user;
 
     @OneToOne
+    @NotNull
     private Contest contest;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "PLAYER_PRONOSTIC",
-            joinColumns = {@JoinColumn(name = "PLAYER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "PRONOSTIC_ID", referencedColumnName = "ID")})
-    private List<Pronostic> pronostics;
+    @OneToMany(mappedBy="player",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    private Set<Pronostic> pronostics = new HashSet<>();
 
     @Column(name = "POINTS")
     private int points;

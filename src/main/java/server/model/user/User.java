@@ -4,12 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import server.model.bettor.Contest;
+import server.model.football.Competition;
 import server.model.football.Team;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "APP_USER")

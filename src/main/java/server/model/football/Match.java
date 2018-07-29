@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -32,11 +33,12 @@ public class Match {
     @Column
     private Integer matchday;
 
-    @Column
-    private String stage;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private StandingStage stage;
 
-    @Column
-    private String groupe;
+    @Column(name = "GROUPE")
+    private String group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Team homeTeam;

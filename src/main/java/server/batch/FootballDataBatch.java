@@ -3,6 +3,7 @@ package server.batch;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import server.dto.footballdata.*;
 import server.model.football.*;
@@ -58,8 +59,19 @@ public class FootballDataBatch {
     //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")
     @Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
     public void feedingJob(){
-        log.warn("Feeding job start");
+
+        log.warn("Feeding job start 2001");
+        updateCompetitionByFootballDataId("2001");
+        this.pause(1);
+        log.warn("Feeding job start 2000");
+        updateCompetitionByFootballDataId("2000");
+        this.pause(1);
+        log.warn("Feeding job start 2015");
         updateCompetitionByFootballDataId("2015");
+        this.pause(1);
+        log.warn("Feeding job start 2021");
+        updateCompetitionByFootballDataId("2021");
+        this.pause(1);
     }
 
     private void updateCompetitionByFootballDataId(String idCompetitionFBD){
@@ -88,7 +100,7 @@ public class FootballDataBatch {
         Set<Season> seasonsdto = competitiondto.getSeasons();
         Set<Team> teamsdto = this.getTeamsByFootballDataId(idCompetitionFBD);
         Set<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
-        Set<Match> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
+        Set<MatchDto> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
 
         Competition savedCompetition = new Competition();
         savedCompetition.setName(competitiondto.getName());
@@ -96,30 +108,46 @@ public class FootballDataBatch {
         savedCompetition.setLastUpdated(competitiondto.getLastUpdated());
         savedCompetition.setLogo(getCompetitionlogo(idCompetitionFBD));
 
-        if (! areaRepository.existsByName(areadto.getName())){
-            areadto.setId(null);
-            areadto = areaRepository.save(areadto);
+        if(areaRepository.existsByName(areadto.getName())){
+            savedCompetition.setArea(areaRepository.findByName(areadto.getName()));
+        }else{
+            if(areadto.getName() != null){
+                areadto.setId(null);
+                areadto = areaRepository.save(areadto);
+                savedCompetition.setArea(areadto);
+            }
         }
 
-        savedCompetition.setArea(areadto);
 
         for(Season season: seasonsdto){
             season.setId(null);
             season.setCompetition(savedCompetition);
-            savedCompetition.getSeasons().add(season);
+            if (season.getStartDate() != null) savedCompetition.getSeasons().add(season);
         }
 
         try {
-            savedCompetition.setCurrentSeason(getTheLastSeason(savedCompetition));
+            if (savedCompetition.getSeasons().size() > 0 ) savedCompetition.setCurrentSeason(getTheLastSeason(savedCompetition));
         }catch (ParseException e){ log.warn(e.getMessage()); }
 
         for(Team team: teamsdto){
             if (! teamRepository.existsByName(team.getName()) ){
-                //team.setLogo(this.getLogoFromTeamId(team.getId()));
+                team.setLogo(this.getLogoFromTeamId(team.getId()));
+                Area savedArea = team.getArea();
+                if(areaRepository.existsByName(savedArea.getName())){
+                    team.setArea(areaRepository.findByName(savedArea.getName()));
+                }else{
+                    if(savedArea.getName() != null){
+                        savedArea.setId(null);
+                        savedArea = areaRepository.save(savedArea);
+                        team.setArea(savedArea);
+                    }else {
+                        team.setArea(null);
+                    }
+                }
+
                 team.setId(null);
                 team.setCompetition(new HashSet<>());
                 team.getCompetition().add(savedCompetition);
-                team.setArea(isNull(team.getArea().getName()) ? savedCompetition.getArea() : savedCompetition.getArea());
                 savedCompetition.getTeams().add(team);
             }
         }
@@ -141,16 +169,23 @@ public class FootballDataBatch {
         }
 
 
-        for (Match match: matchesdto){
-            // Sauvegarde du match
-            match.setId(null);
-            match.getScore().setId(null);
+        for (MatchDto matchesDto: matchesdto){
+            matchesDto.getScore().setId(null);
+            Match match = new Match();
+            match.setStage(this.parseStage(matchesDto.getStage()));
+            match.setScore(matchesDto.getScore());
             match.setSeason(savedCompetition.getCurrentSeason());
-            match.setAwayTeam(getTeamFromName(savedCompetition.getTeams(),match.getAwayTeam().getName()));
-            match.setHomeTeam(getTeamFromName(savedCompetition.getTeams(),match.getHomeTeam().getName()));
-            match.setSeason(savedCompetition.getCurrentSeason());
+            match.setUtcDate(matchesDto.getUtcDate());
+            match.setStatus(matchesDto.getStatus());
+            match.setMatchday(matchesDto.getMatchday());
+            match.setGroup(matchesDto.getGroup());
+            match.setHomeTeam(getTeamFromName(savedCompetition.getTeams(),matchesDto.getHomeTeam().getName()));
+            match.setAwayTeam(getTeamFromName(savedCompetition.getTeams(),matchesDto.getAwayTeam().getName()));
             match.getScore().setMatch(match);
+            match.setLastUpdated(matchesDto.getLastUpdated());
             match.setCompetition(savedCompetition);
+
+            savedCompetition.getAvailableStage().add(match.getStage());
             savedCompetition.getMatches().add(match);
         }
 
@@ -205,7 +240,7 @@ public class FootballDataBatch {
         return teamsDto.getTeams();
     }
 
-    private Set<Match> getMatchessByFootballDataId(String idCompetitionFBD){
+    private Set<MatchDto> getMatchessByFootballDataId(String idCompetitionFBD){
         MatchesDto matchesDto = restTemplate.getForObject(BASE_API_V2_URL + "competitions/"+ idCompetitionFBD + "/matches", MatchesDto.class);
         return matchesDto.getMatches();
     }
@@ -219,18 +254,25 @@ public class FootballDataBatch {
     private String getCompetitionlogo(String id){
         switch (id){
             case "2015": return "https://upload.wikimedia.org/wikipedia/fr/9/9b/Logo_de_la_Ligue_1_%282008%29.svg";
-            case "445": return "https://upload.wikimedia.org/wikipedia/fr/f/f2/Premier_League_Logo.svg";
+            case "2001": return "https://upload.wikimedia.org/wikipedia/fr/b/bf/UEFA_Champions_League_logo_2.svg";
+            case "2021": return "https://upload.wikimedia.org/wikipedia/fr/f/f2/Premier_League_Logo.svg";
             case "452": return "https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg";
             case "455": return "https://upload.wikimedia.org/wikipedia/commons/archive/9/92/20171221112945%21LaLiga_Santander.svg";
             case "456": return "https://upload.wikimedia.org/wikipedia/en/f/f7/LegaSerieAlogoTIM.png";
-            case "467": return "https://upload.wikimedia.org/wikipedia/fr/f/f7/FIFA_World_Cup_2018_Logo.png";
+            case "2000": return "https://upload.wikimedia.org/wikipedia/en/6/67/2018_FIFA_World_Cup.svg";
             default: return null;
         }
     }
 
     private String getLogoFromTeamId(Long teamId){
-        TeamsLogoDto teamsLogoDto = restTemplate.getForObject(BASE_API_V1_URL + "teams/"+ teamId , TeamsLogoDto.class);
-        return teamsLogoDto.getCrestUrl();
+        String logo = null;
+        try{
+            TeamsLogoDto teamsLogoDto = restTemplate.getForObject(BASE_API_V1_URL + "teams/"+ teamId , TeamsLogoDto.class);
+            logo = teamsLogoDto.getCrestUrl();
+        }catch (RestClientException e){
+            log.warn(e.getMessage());
+        }
+        return logo;
 
     }
 
@@ -243,6 +285,46 @@ public class FootballDataBatch {
             }
         }
         return result;
+    }
+
+    private void pause(int minutes){
+        try{
+            Thread.sleep(1000 * 60 * minutes);
+        }catch (InterruptedException e){ log.warn(e.getMessage());}
+    }
+
+
+    private StandingStage parseStage(String stage){
+        switch (stage){
+            case "REGULAR_SEASON" :
+                return StandingStage.REGULAR_SEASON;
+            case "GROUP_STAGE" :
+                return StandingStage.GROUP_STAGE;
+            case "ROUND_OF_16" :
+                return  StandingStage.ROUND_OF_16;
+            case "QUARTER_FINALS" :
+                return StandingStage.QUARTER_FINALS;
+            case "SEMI_FINALS" :
+                return StandingStage.SEMI_FINALS;
+            case "3RD_PLACE" :
+                return StandingStage.SMALL_FINAL;
+            case "FINAL":
+                return StandingStage.FINAL;
+            case "PRELIMINARY_FINAL":
+                return StandingStage.PRELIMINARY_FINAL;
+            case "PRELIMINARY_SEMI_FINALS":
+                return StandingStage.PRELIMINARY_SEMI_FINALS;
+            case "1ST_QUALIFYING_ROUND":
+                return StandingStage.QUALIFYING_ROUND_1ST;
+            case "2ND_QUALIFYING_ROUND":
+                return StandingStage.QUALIFYING_ROUND_2ND;
+            case "3RD_QUALIFYING_ROUND":
+                return StandingStage.QUALIFYING_ROUND_3RD;
+            default:
+                return null;
+
+
+        }
     }
 
 }

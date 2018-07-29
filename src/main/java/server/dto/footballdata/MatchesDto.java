@@ -16,5 +16,5 @@ import java.util.Set;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MatchesDto {
-    private Set<Match> matches;
+    private Set<MatchDto> matches;
 }

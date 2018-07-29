@@ -56,4 +56,8 @@ public class Competition {
     @JsonIgnore
     private Set<Match> matches = new HashSet<>();
 
+    @ElementCollection(targetClass=StandingStage.class)
+    @Enumerated(EnumType.STRING) // Possibly optional (I'm not sure) but defaults to ORDINAL.
+    private Set<StandingStage> availableStage = new HashSet<>();
+
 }
