@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import server.model.football.Competition;
-import server.model.football.Match;
-import server.model.football.Standing;
-import server.model.football.Team;
+import server.model.football.*;
 import server.service.CompetitionService;
 
 import java.util.List;
@@ -27,15 +24,19 @@ public class CompetitionResourceDelegate {
         return new ResponseEntity<>(this.competitionService.getAllCompetition(), HttpStatus.OK);
     }
 
+    public ResponseEntity<Competition> getCompetitionById(Long competitionId){
+        return new ResponseEntity<>(this.competitionService.getCompetitionById(competitionId),HttpStatus.OK);
+    }
+
     public ResponseEntity<Set<Team>> getAllTeamOfCompetition(Long competitionId){
         return new ResponseEntity<>(this.competitionService.getAllTeamOfCompetition(competitionId),HttpStatus.OK);
     }
 
-    public ResponseEntity<Set<Match>> getAllMatchesOfCompetition(Long competitionId){
-        return new ResponseEntity<>(this.competitionService.getAllMatchesOfCompetition(competitionId),HttpStatus.OK);
+    public ResponseEntity<Set<Match>> getAllMatchesOfCompetition(Long competitionId, Integer matchDay, StandingStage stage, StandingGroup group){
+        return new ResponseEntity<>(this.competitionService.getAllMatchesOfCompetition(competitionId,matchDay,stage,group),HttpStatus.OK);
     }
 
-    public ResponseEntity<Set<Standing>> getAllStandingsOfCompetition(Long competitionId){
-        return new ResponseEntity<>(this.competitionService.getAllStandingsOfCompetition(competitionId),HttpStatus.OK);
+    public ResponseEntity<Set<Standing>> getAllStandingsOfCompetition(Long competitionId,StandingType type, StandingGroup group){
+        return new ResponseEntity<>(this.competitionService.getAllStandingsOfCompetition(competitionId,type,group),HttpStatus.OK);
     }
 }

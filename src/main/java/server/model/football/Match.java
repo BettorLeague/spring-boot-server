@@ -33,12 +33,12 @@ public class Match {
     @Column
     private Integer matchday;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private StandingStage stage;
 
     @Column(name = "GROUPE")
-    private String group;
+    @Enumerated(EnumType.STRING)
+    private StandingGroup group;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Team homeTeam;

@@ -54,9 +54,6 @@ public class Team {
     @Column
     private String clubColors;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdated;
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "teams")
     @JsonIgnore
     private Set<Competition> competition = new HashSet<>();

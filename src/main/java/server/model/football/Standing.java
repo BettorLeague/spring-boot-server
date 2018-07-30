@@ -20,16 +20,15 @@ public class Standing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private StandingStage stage;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private StandingType type;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "GROUPE")
-    private String group;
+    private StandingGroup group;
 
     @OneToMany(mappedBy="standing",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<StandingTable> table = new HashSet<>();

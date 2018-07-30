@@ -2,15 +2,9 @@ package server.rest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import server.batch.FootballDataBatch;
-import server.model.football.Competition;
-import server.model.football.Match;
-import server.model.football.Standing;
-import server.model.football.Team;
+import server.model.football.*;
 import server.service.impl.CompetitionServiceImpl;
 
 import javax.inject.Inject;
@@ -33,19 +27,29 @@ public class CompetitionResource {
         return this.competitionResourceDelegate.getAllCompetition();
     }
 
+    @RequestMapping(path = "/api/competition/{competitionId}", method = RequestMethod.GET)
+    public ResponseEntity<Set<Team>> getCompetitionById(@PathVariable("competitionId") Long competitionId) {
+        return this.competitionResourceDelegate.getAllTeamOfCompetition(competitionId);
+    }
+
     @RequestMapping(path = "/api/competition/{competitionId}/teams", method = RequestMethod.GET)
     public ResponseEntity<Set<Team>> getAllTeamOfCompetition(@PathVariable("competitionId") Long competitionId) {
         return this.competitionResourceDelegate.getAllTeamOfCompetition(competitionId);
     }
 
     @RequestMapping(path = "/api/competition/{competitionId}/matches", method = RequestMethod.GET)
-    public ResponseEntity<Set<Match>> getAllMatchesOfCompetition(@PathVariable("competitionId") Long competitionId) {
-        return this.competitionResourceDelegate.getAllMatchesOfCompetition(competitionId);
+    public ResponseEntity<Set<Match>> getAllMatchesOfCompetition(@PathVariable("competitionId") Long competitionId,
+                                                                 @RequestParam(value = "matchday", required=false) Integer matchday,
+                                                                 @RequestParam(value = "stage", required=false) StandingStage stage,
+                                                                 @RequestParam(value = "group", required=false) StandingGroup group) {
+        return this.competitionResourceDelegate.getAllMatchesOfCompetition(competitionId,matchday,stage,group);
     }
 
     @RequestMapping(path = "/api/competition/{competitionId}/standings", method = RequestMethod.GET)
-    public ResponseEntity<Set<Standing>> getAllStandingsOfCompetition(@PathVariable("competitionId") Long competitionId) {
-        return this.competitionResourceDelegate.getAllStandingsOfCompetition(competitionId);
+    public ResponseEntity<Set<Standing>> getAllStandingsOfCompetition(@PathVariable("competitionId") Long competitionId,
+                                                                      @RequestParam(value = "type", required=false)  StandingType type,
+                                                                      @RequestParam(value = "group", required=false) StandingGroup group) {
+        return this.competitionResourceDelegate.getAllStandingsOfCompetition(competitionId,type,group);
     }
 
     @RequestMapping(path = "/api/competition", method = RequestMethod.POST)

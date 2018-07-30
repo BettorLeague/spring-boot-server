@@ -56,15 +56,24 @@ public class FootballDataBatch {
         this.restTemplate.getInterceptors().add(new RestTemplateInterceptor());
     }
 
-    //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")
+    //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
     @Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
     public void feedingJob(){
 
+        log.warn("Feeding job start 2000");
+        updateCompetitionByFootballDataId("2000");
+        this.pause(1);
         log.warn("Feeding job start 2001");
         updateCompetitionByFootballDataId("2001");
         this.pause(1);
-        log.warn("Feeding job start 2000");
-        updateCompetitionByFootballDataId("2000");
+        log.warn("Feeding job start 2002");
+        updateCompetitionByFootballDataId("2002");
+        this.pause(1);
+        log.warn("Feeding job start 2014");
+        updateCompetitionByFootballDataId("2014");
+        this.pause(1);
+        log.warn("Feeding job start 2019");
+        updateCompetitionByFootballDataId("2019");
         this.pause(1);
         log.warn("Feeding job start 2015");
         updateCompetitionByFootballDataId("2015");
@@ -158,7 +167,8 @@ public class FootballDataBatch {
             standing.setId(null);
             standing.setTable(new HashSet<>());
             standing.setCompetition(savedCompetition);
-
+            if(standing.getGroup() != null && this.parseGroupe(standing.getGroup().toString()) != null ) standing.setGroup(parseGroupe(standing.getGroup().toString()));
+            standing.setStage(parseStage(standing.getStage().toString()));
             for(StandingTable table: tablesbuffer){
                 table.setTeam(getTeamFromName(savedCompetition.getTeams(),table.getTeam().getName()));
                 table.setId(null);
@@ -166,19 +176,20 @@ public class FootballDataBatch {
                 standing.getTable().add(table);
             }
             savedCompetition.getStandings().add(standing);
+            savedCompetition.getAvailableGroup().add(standing.getGroup());
         }
 
 
         for (MatchDto matchesDto: matchesdto){
             matchesDto.getScore().setId(null);
             Match match = new Match();
-            match.setStage(this.parseStage(matchesDto.getStage()));
+            match.setStage(parseStage(matchesDto.getStage()));
             match.setScore(matchesDto.getScore());
             match.setSeason(savedCompetition.getCurrentSeason());
             match.setUtcDate(matchesDto.getUtcDate());
             match.setStatus(matchesDto.getStatus());
             match.setMatchday(matchesDto.getMatchday());
-            match.setGroup(matchesDto.getGroup());
+            if(matchesDto.getGroup() != null && this.parseGroupe(matchesDto.getGroup()) != null ) match.setGroup(parseGroupe(matchesDto.getGroup()));
             match.setHomeTeam(getTeamFromName(savedCompetition.getTeams(),matchesDto.getHomeTeam().getName()));
             match.setAwayTeam(getTeamFromName(savedCompetition.getTeams(),matchesDto.getAwayTeam().getName()));
             match.getScore().setMatch(match);
@@ -256,9 +267,9 @@ public class FootballDataBatch {
             case "2015": return "https://upload.wikimedia.org/wikipedia/fr/9/9b/Logo_de_la_Ligue_1_%282008%29.svg";
             case "2001": return "https://upload.wikimedia.org/wikipedia/fr/b/bf/UEFA_Champions_League_logo_2.svg";
             case "2021": return "https://upload.wikimedia.org/wikipedia/fr/f/f2/Premier_League_Logo.svg";
-            case "452": return "https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg";
-            case "455": return "https://upload.wikimedia.org/wikipedia/commons/archive/9/92/20171221112945%21LaLiga_Santander.svg";
-            case "456": return "https://upload.wikimedia.org/wikipedia/en/f/f7/LegaSerieAlogoTIM.png";
+            case "2002": return "https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg";
+            case "2014": return "https://upload.wikimedia.org/wikipedia/commons/archive/9/92/20171221112945%21LaLiga_Santander.svg";
+            case "2019": return "https://upload.wikimedia.org/wikipedia/en/f/f7/LegaSerieAlogoTIM.png";
             case "2000": return "https://upload.wikimedia.org/wikipedia/en/6/67/2018_FIFA_World_Cup.svg";
             default: return null;
         }
@@ -320,6 +331,64 @@ public class FootballDataBatch {
                 return StandingStage.QUALIFYING_ROUND_2ND;
             case "3RD_QUALIFYING_ROUND":
                 return StandingStage.QUALIFYING_ROUND_3RD;
+            default:
+                return null;
+
+
+        }
+    }
+
+
+    private StandingGroup parseGroupe(String group){
+        switch (group){
+            case "Group A" :
+                return StandingGroup.GROUP_A;
+            case "Group B" :
+                return StandingGroup.GROUP_B;
+            case "Group C" :
+                return StandingGroup.GROUP_C;
+            case "Group D" :
+                return StandingGroup.GROUP_D;
+            case "Group E" :
+                return StandingGroup.GROUP_E;
+            case "Group F" :
+                return StandingGroup.GROUP_F;
+            case "Group G" :
+                return StandingGroup.GROUP_G;
+            case "Group H" :
+                return StandingGroup.GROUP_H;
+            case "Group I" :
+                return StandingGroup.GROUP_I;
+            case "Group J" :
+                return StandingGroup.GROUP_J;
+            case "Group K" :
+                return StandingGroup.GROUP_K;
+            case "Group L" :
+                return StandingGroup.GROUP_L;
+            case "GROUP_A" :
+                return StandingGroup.GROUP_A;
+            case "GROUP_B" :
+                return StandingGroup.GROUP_B;
+            case "GROUP_C" :
+                return StandingGroup.GROUP_C;
+            case "GROUP_D" :
+                return StandingGroup.GROUP_D;
+            case "GROUP_E" :
+                return StandingGroup.GROUP_E;
+            case "GROUP_F" :
+                return StandingGroup.GROUP_F;
+            case "GROUP_G" :
+                return StandingGroup.GROUP_G;
+            case "GROUP_H" :
+                return StandingGroup.GROUP_H;
+            case "GROUP_I" :
+                return StandingGroup.GROUP_I;
+            case "GROUP_J" :
+                return StandingGroup.GROUP_J;
+            case "GROUP_K" :
+                return StandingGroup.GROUP_K;
+            case "GROUP_L" :
+                return StandingGroup.GROUP_L;
             default:
                 return null;
 

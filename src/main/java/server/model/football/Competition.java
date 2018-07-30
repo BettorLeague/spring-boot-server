@@ -57,7 +57,11 @@ public class Competition {
     private Set<Match> matches = new HashSet<>();
 
     @ElementCollection(targetClass=StandingStage.class)
-    @Enumerated(EnumType.STRING) // Possibly optional (I'm not sure) but defaults to ORDINAL.
+    @Enumerated(EnumType.STRING)
     private Set<StandingStage> availableStage = new HashSet<>();
+
+    @ElementCollection(targetClass=StandingGroup.class)
+    @Enumerated(EnumType.STRING)
+    private Set<StandingGroup> availableGroup = new HashSet<>();
 
 }
