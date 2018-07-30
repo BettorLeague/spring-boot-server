@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode(exclude={"season","score","competition"})
+@Table(name = "FIXTURE")
 public class Match {
 
     @Id
@@ -25,6 +24,7 @@ public class Match {
     private Season season;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "DATE")
     private Date utcDate;
 
     @Column

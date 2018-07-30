@@ -5,9 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import server.batch.FootballDataBatch;
 import server.model.football.*;
-import server.service.impl.CompetitionServiceImpl;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
 

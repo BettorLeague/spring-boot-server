@@ -27,6 +27,7 @@ public class Score {
 
     @OneToOne
     @JsonIgnore
+    @JoinColumn(name="FIXTURE_ID")
     private Match match;
 
     @Embedded

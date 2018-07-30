@@ -62,6 +62,7 @@ public class FootballDataBatch {
 
         log.warn("Feeding job start 2000");
         updateCompetitionByFootballDataId("2000");
+        /*
         this.pause(1);
         log.warn("Feeding job start 2001");
         updateCompetitionByFootballDataId("2001");
@@ -80,7 +81,7 @@ public class FootballDataBatch {
         this.pause(1);
         log.warn("Feeding job start 2021");
         updateCompetitionByFootballDataId("2021");
-        this.pause(1);
+        this.pause(1);*/
     }
 
     private void updateCompetitionByFootballDataId(String idCompetitionFBD){
@@ -92,7 +93,7 @@ public class FootballDataBatch {
             log.info("Competition {} already here, update", competitionDto.getName());
             updateCompetition(competitionDto,idCompetitionFBD);
 
-        // Sinon creer la competition en base à partir du dto
+            // Sinon creer la competition en base à partir du dto
         }else {
             log.info("Competition {} is new, create", competitionDto.getName());
             createCompetition(competitionDto,idCompetitionFBD);
@@ -211,14 +212,11 @@ public class FootballDataBatch {
         List<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
         List<Match> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
         log.info("Competition à update : {}",competitionToUpdate.getName());
-
         //Mise à jour de la saison si différente
         if(competitiondto.getCurrentSeason().getCurrentMatchday() != null && competitiondto.getCurrentSeason().getCurrentMatchday() > competitionToUpdate.getCurrentSeason().getCurrentMatchday()){
             competitionToUpdate.getCurrentSeason().setCurrentMatchday(competitiondto.getCurrentSeason().getCurrentMatchday());
         }
         //Mise à jour de la liste des match
-
-
         // Sauvegarde de la competition
         competitionRepository.save(competitionToUpdate);*/
 

@@ -1,28 +1,48 @@
 version: "3"
 services:
+  nginx:
+    container_name: bettor-league-nginx
+    image: nginx:1.13
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    links:
+      - bettor-league-api
+    depends_on:
+      - bettor-league-api
   phpmyadmin:
-     container_name: bettor-league-phpmyadmin
-     image: phpmyadmin/phpmyadmin
-     ports :
+    container_name: bettor-league-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports :
       - "8090:80"
-     environment:
+    environment:
       - MYSQL_USERNAME=root
       - MYSQL_PASSWORD=root
-     links:
+    links:
       - database:db
   database:
-    container_name: bettor-league-db
+    container_name: bettor-league-database
     image: mysql
     ports:
-     - "3306:3306"
+      - "3306:3306"
     volumes:
-     - ./databaseProd:/var/lib/mysql
+      - ./databaseProd:/var/lib/mysql
     environment:
-       - MYSQL_ROOT_PASSWORD=root
-       - MYSQL_DATABASE=bettorLeagueDatabase
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=bettorLeagueDatabase
   bettor-league-api:
     container_name: bettor-league-api
     image: nadjim/bettor-league-api
     restart: always
     ports:
-      - "8080:8080"
+      - "8080"
+    environment:
+      - DATABASE_HOST=database
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=bettorLeagueDatabase
+      - DATABASE_PORT=3306
+    depends_on:
+      - database
