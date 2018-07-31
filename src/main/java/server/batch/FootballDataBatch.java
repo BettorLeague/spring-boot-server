@@ -62,7 +62,6 @@ public class FootballDataBatch {
 
         log.warn("Feeding job start 2000");
         updateCompetitionByFootballDataId("2000");
-        /*
         this.pause(1);
         log.warn("Feeding job start 2001");
         updateCompetitionByFootballDataId("2001");
@@ -81,7 +80,7 @@ public class FootballDataBatch {
         this.pause(1);
         log.warn("Feeding job start 2021");
         updateCompetitionByFootballDataId("2021");
-        this.pause(1);*/
+        this.pause(1);
     }
 
     private void updateCompetitionByFootballDataId(String idCompetitionFBD){
