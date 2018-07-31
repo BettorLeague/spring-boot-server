@@ -1,5 +1,4 @@
 #!/bin/bash
-cd /${DEPLOY_PATH}
 docker pull nadjim/bettor-league-api
-docker-compose down
-docker-compose up -d
+docker-compose -f /$DEPLOY_PATH/docker-compose.yml down
+docker-compose -f /$DEPLOY_PATH/docker-compose.yml up -d
