@@ -1,5 +1,5 @@
 package server.rest;
-/*
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +19,7 @@ import server.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.nonNull;
 
@@ -74,12 +75,12 @@ public class UserResourceDelegate {
     }
 
 
-    public ResponseEntity<List<Player>> getAllPlayerByUser(HttpServletRequest request){
+    public ResponseEntity<Set<Player>> getPlayers(HttpServletRequest request){
         String token = request.getHeader(tokenHeader);
         User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
-        return new ResponseEntity<>(playerService.getAllPlayerByUserId(user.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getPlayers(user.getId()), HttpStatus.OK);
     }
-
+/*
     public ResponseEntity<UserStatsResponse> getUserStats(HttpServletRequest request){
 
         String token = request.getHeader(tokenHeader);
@@ -159,5 +160,5 @@ public class UserResourceDelegate {
         }else{
             return new ResponseEntity<>(contestService.addUserToContest(contest.getId(),user.getId()),HttpStatus.OK);
         }
-    }
-}*/
+    }*/
+}

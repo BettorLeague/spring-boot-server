@@ -1,23 +1,21 @@
 package server.rest;
-/*
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
+import server.model.bettor.Message;
 import server.model.bettor.Player;
 import server.model.bettor.Pronostic;
 import server.model.user.User;
+import server.repository.bettor.PlayerRepository;
 import server.security.JwtTokenUtil;
 import server.service.ContestService;
 import server.service.PlayerService;
 import server.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
+import java.util.Set;
 
 @Component
 public class PlayerResourceDelegate {
@@ -28,35 +26,27 @@ public class PlayerResourceDelegate {
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final PlayerService playerService;
-    private final ContestService contestService;
+    private final PlayerRepository playerRepository;
 
     public PlayerResourceDelegate(UserService userService,
                                 ContestService contestService,
                                 PlayerService playerService,
+                                PlayerRepository playerRepository,
                                 JwtTokenUtil jwtTokenUtil){
         this.userService = userService;
         this.playerService = playerService;
-        this.contestService = contestService;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.playerRepository = playerRepository;
     }
 
-    public ResponseEntity<List<Pronostic>> upadtePronostic(List<Pronostic> pronostics,Long contestId , HttpServletRequest request){
+    public ResponseEntity<Set<Pronostic>> getPronostics(Long contestId,HttpServletRequest request) {
 
         String token = request.getHeader(tokenHeader);
         User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
-        if (isNull(user)){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }else {
-            Player player = playerService.getPlayerByUserIdAndContestId(user.getId(),contestId);
-            if(nonNull(player)){
-                pronostics.forEach(e ->{
-                    player.getPronostics().forEach(i -> {
 
-                    });
-                });
-                return new ResponseEntity<>(HttpStatus.OK);
-            }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        if(playerRepository.existsByUserIdAndContestId(user.getId(),contestId)){
+            Player player = playerRepository.findByUserIdAndContestId(user.getId(),contestId);
+            return new ResponseEntity<>(this.playerService.getPronostics(player.getId()),HttpStatus.OK);
+        }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
-*/

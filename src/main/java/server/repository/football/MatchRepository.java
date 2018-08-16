@@ -10,6 +10,9 @@ import server.model.football.StandingStage;
 import java.util.Set;
 
 public interface MatchRepository extends JpaRepository<Match, Long> {
+    boolean existsByFbdId(Long fbdId);
+    Match findByFbdId(Long fbdId);
+
     Set<Match> findAllByCompetitionId(Long  competitionId);
     Set<Match> findAllByCompetitionIdAndStage(Long competitionId, StandingStage stage);
     Set<Match> findAllByCompetitionIdAndGroup(Long competitionId, StandingGroup group);

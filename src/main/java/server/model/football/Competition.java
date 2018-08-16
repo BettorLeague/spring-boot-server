@@ -35,10 +35,11 @@ public class Competition {
     @ManyToOne(fetch = FetchType.LAZY)
     private Area area;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     private Season currentSeason;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "competition")
+    @JsonIgnore
     private Set<Season> seasons = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

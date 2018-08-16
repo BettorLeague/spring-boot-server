@@ -3,10 +3,12 @@ package server.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import server.dto.authentification.SignupRequest;
 import server.dto.user.UpdateUserInfoRequest;
+import server.model.bettor.Player;
 import server.model.user.Authority;
 import server.model.user.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     List<User> getAllUser();
@@ -31,4 +33,7 @@ public interface UserService {
 
     UserDetails loadUserByUsername(String username);
     User signUp(SignupRequest jwtSignupRequest);
+
+
+    Set<Player> getPlayers(Long userId);
 }

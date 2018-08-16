@@ -1,7 +1,10 @@
 package server.model.bettor;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import server.model.user.User;
 
@@ -16,6 +19,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode(exclude={"user","pronostics"})
 public class Player {
 
     @Id
@@ -23,15 +28,17 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @NotNull
+    @JsonIgnore
     private Contest contest;
 
     @OneToMany(mappedBy="player",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<Pronostic> pronostics = new HashSet<>();
 
     @Column(name = "POINTS")

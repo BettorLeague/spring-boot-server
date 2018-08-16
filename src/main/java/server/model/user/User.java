@@ -1,11 +1,13 @@
 package server.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import server.model.bettor.Contest;
-import server.model.football.Competition;
+import server.model.bettor.Player;
 import server.model.football.Team;
 
 import javax.persistence.*;
@@ -20,6 +22,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode(exclude={"contests","favoriteTeam","sex","players","contests"})
 public class User  {
 
     @Id
@@ -54,10 +58,11 @@ public class User  {
     @NotNull
     private Boolean enabled;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "APP_USER_AUTHORITY",
-            joinColumns = {@JoinColumn(name = "APP_USER_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "AUTHORITY_ID", referencedColumnName = "ID")})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "APP_USER_AUTHORITIES",
+            joinColumns = { @JoinColumn(name = "APP_USER_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "AUTHORITY_ID") })
     private List<Authority> authorities;
 
     @Column(name = "COUNTRY")
@@ -83,6 +88,12 @@ public class User  {
     @Column(name = "LEVEL")
     private Long level;
 
+    @OneToMany(mappedBy="user",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Player> players = new HashSet<>();
 
+    @OneToMany(mappedBy="owner",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Contest> contests = new HashSet<>();
 
 }

@@ -1,5 +1,5 @@
 package server.rest;
-/*
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,11 +7,16 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import server.dto.contest.ContestRequest;
 import server.model.bettor.Contest;
+import server.model.bettor.ContestType;
+import server.model.bettor.Message;
 import server.model.bettor.Player;
 import server.service.ContestService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class ContestResourceDelegate {
@@ -22,31 +27,36 @@ public class ContestResourceDelegate {
         this.contestService = contestService;
     }
 
-    public ResponseEntity<List<Contest>> getAllPublicContest() {
-        return new ResponseEntity<>(this.contestService.getAllPublicContest(), HttpStatus.OK);
+    public ResponseEntity<Set<Contest>> getAllContest(ContestType type) {
+        return new ResponseEntity<>(this.contestService.getAllContest(type), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Contest> addContest(ContestRequest contest, HttpServletRequest request) {
+        if(contest.getCaption() == null || contest.getType() == null || contest.getCompetitionId() == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        else return new ResponseEntity<>(this.contestService.addContest(contest,request), HttpStatus.OK);
     }
 
     public ResponseEntity<Contest> getContestById(Long contestId) {
-        return new ResponseEntity<>(this.contestService.getContestById(contestId), HttpStatus.OK);
+        Contest result = this.contestService.getContestById(contestId);
+        if (result == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        else return new ResponseEntity<>(this.contestService.getContestById(contestId), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Player>> getPlayersByContestId( Long contestId) {
+    public void deleteContest(Long contestId) {
+        this.contestService.deleteContest(contestId);
+    }
+
+    public ResponseEntity<Set<Player>> getPlayersByContestId( Long contestId) {
+        Set<Player> result = this.contestService.getPlayersByContestId(contestId);
+        if (result == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(this.contestService.getPlayersByContestId(contestId), HttpStatus.OK);
     }
 
-    public ResponseEntity<Player> getPlayerByContestIdAndPlayerId(Long contestId,Long playerId) {
-        return new ResponseEntity<>(this.contestService.getPlayerByContestIdAndPlayerId(contestId,playerId), HttpStatus.OK);
+    public ResponseEntity<Set<Message>> getMessagesByContestId(Long contestId) {
+        Set<Message> result = this.contestService.getMessagesByContestId(contestId);
+        if (result == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(this.contestService.getMessagesByContestId(contestId), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Contest>> getContestPlayedByUserId(Long userId) {
-        return new ResponseEntity<>(this.contestService.getContestPlayedByUser(userId), HttpStatus.OK);
-    }
 
-    public ResponseEntity<Long> getNbPlayerInContest(Long contestId) {
-        if(this.contestService.existContest(contestId)){
-            List<Player> players = this.contestService.getPlayersByContestId(contestId);
-            return new ResponseEntity<>(new Long(players.size()),HttpStatus.OK);
-        }else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
 }
-*/

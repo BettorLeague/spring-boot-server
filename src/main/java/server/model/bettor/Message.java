@@ -22,9 +22,9 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @NotNull
-    private User user;
+    private Player player;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)

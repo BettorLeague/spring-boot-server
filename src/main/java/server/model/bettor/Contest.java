@@ -1,8 +1,10 @@
 package server.model.bettor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -20,6 +22,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode(exclude={"owner","competition","players","messages"})
 public class Contest {
 
     @Id
@@ -32,6 +36,7 @@ public class Contest {
     private String caption;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private User owner;
 
     @Column(name = "TYPE", length = 50)
@@ -40,13 +45,9 @@ public class Contest {
     private ContestType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     private Competition competition;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "CONTEST_USER",
-            joinColumns = {@JoinColumn(name = "CONTEST_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {@JoinColumn(name = "APP_USER_ID", referencedColumnName = "ID")})
+    @OneToMany(mappedBy="contest",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Player> players = new HashSet<>();
 

@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.Objects.isNull;
@@ -183,6 +184,7 @@ public class FootballDataBatch {
         for (MatchDto matchesDto: matchesdto){
             matchesDto.getScore().setId(null);
             Match match = new Match();
+            match.setFbdId(matchesDto.getId());
             match.setStage(parseStage(matchesDto.getStage()));
             match.setScore(matchesDto.getScore());
             match.setSeason(savedCompetition.getCurrentSeason());
@@ -205,19 +207,50 @@ public class FootballDataBatch {
     }
 
     private void updateCompetition(CompetitionDto competitionDto, String idCompetitionFBD){
-        /*
-        Competition competitionToUpdate = competitionRepository.findByName(competitiondto.getName());
-        List<Season> seasonsdto = competitiondto.getSeasons();
-        List<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
-        List<Match> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
+
+        Competition competitionToUpdate = competitionRepository.findByName(competitionDto.getName());
+
+        Set<Season> seasonsdto = competitionDto.getSeasons();
+        Set<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
+        Set<MatchDto> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
+
         log.info("Competition à update : {}",competitionToUpdate.getName());
         //Mise à jour de la saison si différente
-        if(competitiondto.getCurrentSeason().getCurrentMatchday() != null && competitiondto.getCurrentSeason().getCurrentMatchday() > competitionToUpdate.getCurrentSeason().getCurrentMatchday()){
-            competitionToUpdate.getCurrentSeason().setCurrentMatchday(competitiondto.getCurrentSeason().getCurrentMatchday());
-        }
+
+        competitionToUpdate.getCurrentSeason().setCurrentMatchday(competitionDto.getCurrentSeason().getCurrentMatchday());
+        competitionToUpdate.getCurrentSeason().setStartDate(competitionDto.getCurrentSeason().getStartDate());
+        competitionToUpdate.getCurrentSeason().setEndDate(competitionDto.getCurrentSeason().getEndDate());
+
+        //Mise à jour des standings
+
+
+
+
         //Mise à jour de la liste des match
+
+        matchesdto.forEach(matchDto -> {
+            if(matchRepository.existsByFbdId(matchDto.getId())){
+                Match matchToUpdate = matchRepository.findByFbdId(matchDto.getId());
+
+                matchToUpdate.setUtcDate(matchDto.getUtcDate());
+                matchToUpdate.setLastUpdated(matchDto.getLastUpdated());
+                matchToUpdate.setStatus(matchDto.getStatus());
+
+                matchToUpdate.getScore().setDuration(matchDto.getScore().getDuration());
+                matchToUpdate.getScore().setExtraTime(matchDto.getScore().getExtraTime());
+                matchToUpdate.getScore().setFullTime(matchDto.getScore().getFullTime());
+                matchToUpdate.getScore().setHalfTime(matchDto.getScore().getHalfTime());
+                matchToUpdate.getScore().setPenalties(matchDto.getScore().getPenalties());
+                matchToUpdate.getScore().setWinner(matchDto.getScore().getWinner());
+
+                matchRepository.save(matchToUpdate);
+            }
+
+        });
+
+
         // Sauvegarde de la competition
-        competitionRepository.save(competitionToUpdate);*/
+        competitionRepository.save(competitionToUpdate);
 
     }
 

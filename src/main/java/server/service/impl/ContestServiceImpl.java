@@ -1,124 +1,103 @@
 package server.service.impl;
-/*
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import server.dto.contest.ContestRequest;
 import server.model.bettor.Message;
+import server.model.football.Competition;
 import server.model.user.User;
 import server.model.bettor.Contest;
 import server.model.bettor.ContestType;
 import server.model.bettor.Player;
+import server.repository.football.CompetitionRepository;
 import server.repository.user.UserRepository;
 import server.repository.bettor.ContestRepository;
 import server.repository.bettor.PlayerRepository;
+import server.security.JwtTokenUtil;
 import server.service.ContestService;
+import server.service.PlayerService;
+import server.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Objects.nonNull;
 
 @Service
 public class ContestServiceImpl implements ContestService {
+    @Value("${jwt.header}")
+    private String tokenHeader;
 
     private final ContestRepository contestRepository;
     private final UserRepository userRepository;
-    private final PlayerRepository playerRepository;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final PlayerService playerService;
+    private final CompetitionRepository competitionRepository;
 
-    public ContestServiceImpl(ContestRepository contestRepository, UserRepository userRepository, PlayerRepository playerRepository){
+    public ContestServiceImpl(ContestRepository contestRepository,
+                              UserRepository userRepository,
+                              JwtTokenUtil jwtTokenUtil,
+                              PlayerService playerService,
+                              CompetitionRepository competitionRepository){
         this.contestRepository = contestRepository;
+        this.playerService = playerService;
         this.userRepository = userRepository;
-        this.playerRepository = playerRepository;
+        this.competitionRepository = competitionRepository;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
-    public List<Contest> getAllPublicContest(){
-        return this.contestRepository.findAllByType(ContestType.PUBLIC);
+    public Set<Contest> getAllContest(ContestType type){
+        if(type == null) return new HashSet<>(this.contestRepository.findAll());
+        return this.contestRepository.findAllByType(type);
+
     }
 
-    public Contest addContest(Contest contest){
-        Contest result = this.contestRepository.save(contest);
-        if(nonNull(result)){
+    public Contest addContest(ContestRequest contest, HttpServletRequest request){
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        Competition competition = competitionRepository.findOne(contest.getCompetitionId());
+        User user = userRepository.findByEmailOrUsername(username,username);
+        if(competition != null){
+            Contest result = new Contest();
+            result.setCaption(contest.getCaption());
+            result.setCompetition(competition);
+            result.setType(contest.getType());
+            result.setOwner(user);
+            result = contestRepository.save(result);
             Player player = new Player();
-            List<Player> players = new ArrayList<>();
-            List<Message> messages = new ArrayList<>();
-            player.setUserId(result.getOwnerId());
-            player.setUsername(userRepository.findOne(result.getOwnerId()).getUsername());
-            player.setContestId(result.getId());
-            players.add(player);
-            result.setPlayers(players);
-            result.setMessages(messages);
-            return this.contestRepository.save(result);
-        }
-        return null;
+            player.setContest(result);
+            player.setUser(user);
+            player = playerService.addPlayer(player);
+            result.getPlayers().add(player);
+            user.getPlayers().add(player);
+            return contestRepository.save(result);
+            //result.getPlayers().add()
+        }else return  null;
     }
 
-    public List<Player> getPlayersByContestId(Long contestId){
-        Contest contest = contestRepository.findOne(contestId);
-        return contest.getPlayers();
+    public Set<Player> getPlayersByContestId(Long contestId){
+        if (contestRepository.exists(contestId)) return contestRepository.findOne(contestId).getPlayers();
+        else return new HashSet<>();
     }
 
 
     public Contest getContestById(Long contestId){
-        return contestRepository.findOne(contestId);
+        if(contestRepository.exists(contestId)) return contestRepository.findOne(contestId);
+        else return null;
     }
 
-    public Contest deleteContest(Long contestId){
-        Contest contest = contestRepository.findOne(contestId);
-        contestRepository.delete(contest.getId());
-        return contest;
+    public void deleteContest(Long contestId){
+        if(contestRepository.exists(contestId)) contestRepository.delete(contestId);
     }
 
-    public Player getPlayerByContestIdAndPlayerId(Long contestId,Long playerId){
-        Contest contest = contestRepository.findOne(contestId);
-        for(Player player : contest.getPlayers()) {
-            if(player.getId().equals(playerId)) return player;
-        }
-        return null;
+    public Set<Message> getMessagesByContestId(Long contestId){
+        if (contestRepository.exists(contestId)) return this.contestRepository.findOne(contestId).getMessages();
+        else return new HashSet<>();
     }
 
-    public Player addUserToContest(Long contestId, Long userId){
-        Contest contest = contestRepository.findOne(contestId);
-        User user = userRepository.findOne(userId);
-        if(nonNull(contest) && nonNull(user)){
-            Player player = new Player();
-            player.setUserId(user.getId());
-            player.setUsername(userRepository.findOne(userId).getUsername());
-            player.setContestId(contest.getId());
-            contest.getPlayers().add(player);
-            contestRepository.save(contest);
-            return player;
-        }
-        return null;
-
-    }
-
-    public List<Contest> getContestPlayedByUser(Long userId){
-        List<Player> players = playerRepository.findAllByUserId(userId);
-        List<Contest> result = new ArrayList<>();
-        players.forEach(e -> {
-            result.add(contestRepository.findOne(e.getContestId()));
-        });
-        return result;
-    }
-
-    public Player deletePlayerFromContest(Long contestId,Long playerId){
-        Contest contest = contestRepository.findOne(contestId);
-        Player player = playerRepository.findOne(playerId);
-        contest.getPlayers().remove(player);
-        return player;
-    }
-
-
-
-    public boolean existUserInContest(Long userId,Long contestId){
-        List<Player> players = this.getPlayersByContestId(contestId);
-        for(Player player : players){
-            if (player.getUserId().equals(userId)) return true;
-        }
-        return false;
-    }
-
-    public boolean existContest(Long contestId){
-        return this.contestRepository.exists(contestId);
-    }
 
 }
-*/

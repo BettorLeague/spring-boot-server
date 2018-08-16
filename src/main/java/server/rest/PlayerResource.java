@@ -1,14 +1,13 @@
 package server.rest;
-/*
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import server.dto.user.UpdateUserInfoRequest;
 import server.model.bettor.Pronostic;
-import server.model.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class PlayerResource {
@@ -21,15 +20,13 @@ public class PlayerResource {
 
     @RequestMapping(path = "/api/player/contest/{contestId}/pronostic", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Pronostic>> getPronosticsByContest(@PathVariable("contestId") Long contestId ,HttpServletRequest request) {
-        //return playerResourceDelegate.upadtePronostic(contestId,request);
-        return null;
+    public ResponseEntity<Set<Pronostic>> getPronostics(@PathVariable("contestId") Long contestId , HttpServletRequest request) {
+        return playerResourceDelegate.getPronostics(contestId,request);
     }
 
     @RequestMapping(path = "/api/player/contest/{contestId}/pronostic", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Pronostic>> upadtePronostic(@RequestBody List<Pronostic> pronostics, @PathVariable("contestId") Long contestId ,HttpServletRequest request) {
-        return playerResourceDelegate.upadtePronostic(pronostics,contestId,request);
+        return null;
     }
 }
-*/

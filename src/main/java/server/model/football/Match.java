@@ -20,6 +20,10 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    @JsonIgnore
+    private Long fbdId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Season season;
 
@@ -46,7 +50,7 @@ public class Match {
     @ManyToOne(fetch = FetchType.LAZY)
     private Team awayTeam;
 
-    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
     private Score score;
 
     @Temporal(TemporalType.TIMESTAMP)

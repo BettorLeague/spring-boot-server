@@ -26,8 +26,8 @@ public class CompetitionResource {
     }
 
     @RequestMapping(path = "/api/competition/{competitionId}", method = RequestMethod.GET)
-    public ResponseEntity<Set<Team>> getCompetitionById(@PathVariable("competitionId") Long competitionId) {
-        return this.competitionResourceDelegate.getAllTeamOfCompetition(competitionId);
+    public ResponseEntity<Competition> getCompetitionById(@PathVariable("competitionId") Long competitionId) {
+        return this.competitionResourceDelegate.getCompetitionById(competitionId);
     }
 
     @RequestMapping(path = "/api/competition/{competitionId}/teams", method = RequestMethod.GET)
@@ -49,11 +49,11 @@ public class CompetitionResource {
                                                                       @RequestParam(value = "group", required=false) StandingGroup group) {
         return this.competitionResourceDelegate.getAllStandingsOfCompetition(competitionId,type,group);
     }
-
+/*
     @RequestMapping(path = "/api/competition", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateAllCompetition() {
         this.footballDataBatch.feedingJob();
-    }
+    }*/
 
 }
