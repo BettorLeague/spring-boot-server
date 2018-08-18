@@ -3,6 +3,7 @@ package server.service;
 import org.springframework.security.core.userdetails.UserDetails;
 import server.dto.authentification.SignupRequest;
 import server.dto.user.UpdateUserInfoRequest;
+import server.model.bettor.Contest;
 import server.model.bettor.Player;
 import server.model.user.Authority;
 import server.model.user.User;
@@ -36,4 +37,5 @@ public interface UserService {
 
 
     Set<Player> getPlayers(Long userId);
+    Set<Contest> getContests(Long userId);
 }

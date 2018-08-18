@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import server.dto.user.UpdateUserInfoRequest;
+import server.model.bettor.Contest;
 import server.model.bettor.Player;
 import server.model.user.AuthorityName;
 import server.model.user.User;
@@ -17,6 +18,7 @@ import server.repository.football.TeamRepository;
 import server.service.UserService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -153,6 +155,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public Set<Player> getPlayers(Long userId){
         if(userRepository.exists(userId)){
             return userRepository.findOne(userId).getPlayers();
+        }else return null;
+    }
+
+    public Set<Contest> getContests(Long userId){
+        if(userRepository.exists(userId)){
+            Set<Player> players = userRepository.findOne(userId).getPlayers();
+            Set<Contest> contests = new HashSet<>();
+            players.forEach(player -> {
+                contests.add(player.getContest());
+            });
+            return contests;
         }else return null;
     }
 

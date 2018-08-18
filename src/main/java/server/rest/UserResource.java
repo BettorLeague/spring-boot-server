@@ -46,13 +46,30 @@ public class UserResource {
         return userResourceDelegate.deleteUser(request);
     }
 
-
-
     @RequestMapping(path = "/api/user/players", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Set<Player>> getPlayers(HttpServletRequest request) {
         return userResourceDelegate.getPlayers(request);
     }
+
+    @RequestMapping(path = "/api/user/contest", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Set<Contest>> getContests(HttpServletRequest request) {
+        return userResourceDelegate.getContests(request);
+    }
+
+    @RequestMapping(path = "/api/user/contest/{contestId}", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Player> subscribeContest(@PathVariable("contestId") Long contestId,HttpServletRequest request) {
+        return userResourceDelegate.subscribeContest(contestId,request);
+    }
+
+    @RequestMapping(path = "/api/user/contest/{contestId}", method = RequestMethod.PATCH)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<?> unSubscribeContest(@PathVariable("contestId") Long contestId,HttpServletRequest request) {
+        return userResourceDelegate.unSubscribeContest(contestId,request);
+    }
+
 /*
     @RequestMapping(path = "/api/user/stats", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -60,11 +77,6 @@ public class UserResource {
         return userResourceDelegate.getUserStats(request);
     }
 
-    @RequestMapping(path = "/api/user/contest", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Contest>> getUserContests(HttpServletRequest request) {
-        return userResourceDelegate.getUserContests(request);
-    }
 
     @RequestMapping(path = "/api/user/contest", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -79,11 +91,7 @@ public class UserResource {
         return userResourceDelegate.deletePrivateContest(contestId,request);
     }
 
-    @RequestMapping(path = "/api/user/contest/{contestId}", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Player> signupContest(@PathVariable("contestId") Long contestId,HttpServletRequest request) {
-        return userResourceDelegate.signupContest(contestId,request);
-    }
+
 
     @RequestMapping(path = "/api/user/contest/{contestId}/{playerId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_USER')")

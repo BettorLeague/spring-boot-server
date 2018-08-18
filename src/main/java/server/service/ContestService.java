@@ -18,10 +18,13 @@ public interface ContestService {
     void deleteContest(Long contestId);
     Set<Player>  getPlayersByContestId(Long contestId);
     Set<Message> getMessagesByContestId(Long contestId);
+
+    boolean existContestUser(Long contestId,Long userId);
+    Player addUserToContest(Long contestId, Long userId);
+    void deleteUserFromContest(Long contestId,Long userId);
     /*
 
     Player getPlayerByContestIdAndPlayerId(Long contestId,Long playerId);
-    Player addUserToContest(Long contestId, Long userId);
     Player deletePlayerFromContest(Long contestId,Long playerId);
 
     Contest addContest(Contest contest);
@@ -30,6 +33,5 @@ public interface ContestService {
     List<Contest> getContestPlayedByUser(Long userId);
 
 
-    boolean existUserInContest(Long userId,Long contestId);
     boolean existContest(Long contestId);*/
 }

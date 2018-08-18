@@ -28,6 +28,14 @@ public class PlayerServiceImpl implements PlayerService{
          return this.playerRepository.findOne(playerId).getPronostics();
     }
 
+    public Player getPlayerByUserIdAndContestId(Long userId,Long contestId){
+         return this.playerRepository.findByUserIdAndContestId(userId,contestId);
+    }
+
+    public void deletePlayer(Long playerId){
+         this.playerRepository.delete(playerId);
+    }
+
 
 
 }

@@ -57,31 +57,29 @@ public class FootballDataBatch {
         this.restTemplate.getInterceptors().add(new RestTemplateInterceptor());
     }
 
-    //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
+    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
+    //@Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
     public void feedingJob(){
-
+        log.warn("Feeding job start 2015");
+        updateCompetitionByFootballDataId("2015");
+        this.pause(1);
+        log.warn("Feeding job start 2014");
+        updateCompetitionByFootballDataId("2014");
+        this.pause(1);
+        log.warn("Feeding job start 2002");
+        updateCompetitionByFootballDataId("2002");
+        this.pause(1);
         log.warn("Feeding job start 2000");
         updateCompetitionByFootballDataId("2000");
         this.pause(1);
         log.warn("Feeding job start 2001");
         updateCompetitionByFootballDataId("2001");
         this.pause(1);
-        log.warn("Feeding job start 2002");
-        updateCompetitionByFootballDataId("2002");
-        this.pause(1);
-        log.warn("Feeding job start 2014");
-        updateCompetitionByFootballDataId("2014");
-        this.pause(1);
         log.warn("Feeding job start 2019");
         updateCompetitionByFootballDataId("2019");
         this.pause(1);
-        log.warn("Feeding job start 2015");
-        updateCompetitionByFootballDataId("2015");
-        this.pause(1);
         log.warn("Feeding job start 2021");
         updateCompetitionByFootballDataId("2021");
-        this.pause(1);
     }
 
     private void updateCompetitionByFootballDataId(String idCompetitionFBD){
@@ -141,7 +139,7 @@ public class FootballDataBatch {
 
         for(Team team: teamsdto){
             if (! teamRepository.existsByName(team.getName()) ){
-                team.setLogo(this.getLogoFromTeamId(team.getId()));
+                //team.setLogo(this.getLogoFromTeamId(team.getId()));
                 Area savedArea = team.getArea();
                 if(areaRepository.existsByName(savedArea.getName())){
                     team.setArea(areaRepository.findByName(savedArea.getName()));
@@ -319,8 +317,10 @@ public class FootballDataBatch {
 
 
     private Team getTeamFromName(Set<Team> teams,String teamName){
-        Team result = null;
+        Team result = teamRepository.findByName(teamName);
+        //result.setId(null);
         for (Team team: teams){
+            log.info("SEARCHING TEAM : "+teamName+"CURRENT TEAM :"+team.getName());
             if(team.getName().equals(teamName)){
                 result = team;
             }

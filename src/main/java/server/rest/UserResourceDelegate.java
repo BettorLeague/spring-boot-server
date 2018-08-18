@@ -80,6 +80,37 @@ public class UserResourceDelegate {
         User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
         return new ResponseEntity<>(userService.getPlayers(user.getId()), HttpStatus.OK);
     }
+    public ResponseEntity<Set<Contest>> getContests(HttpServletRequest request){
+        String token = request.getHeader(tokenHeader);
+        User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
+        return new ResponseEntity<>(userService.getContests(user.getId()), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Player> subscribeContest(Long contestId,HttpServletRequest request) {
+        String token = request.getHeader(tokenHeader);
+        User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
+        Contest contest = contestService.getContestById(contestId);
+
+        if(contestService.existContestUser(contest.getId(),user.getId())){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }else{
+            return new ResponseEntity<>(contestService.addUserToContest(contest.getId(),user.getId()),HttpStatus.OK);
+        }
+    }
+
+    public ResponseEntity<?> unSubscribeContest(Long contestId,HttpServletRequest request) {
+        String token = request.getHeader(tokenHeader);
+        User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
+        Contest contest = contestService.getContestById(contestId);
+
+        if(contestService.existContestUser(contest.getId(),user.getId())){
+            contestService.deleteUserFromContest(contest.getId(),user.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 /*
     public ResponseEntity<UserStatsResponse> getUserStats(HttpServletRequest request){
 

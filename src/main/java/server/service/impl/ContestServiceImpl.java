@@ -99,5 +99,36 @@ public class ContestServiceImpl implements ContestService {
         else return new HashSet<>();
     }
 
+    public boolean existContestUser(Long contestId,Long userId ){
+        if (contestRepository.exists(contestId) && userRepository.exists(userId)){
+            Contest contest = contestRepository.findOne(contestId);
+            return contest.getPlayers().stream().anyMatch(obj -> obj.getUser().getId().equals(userId));
+        }
+        return false;
+    }
+
+    public Player addUserToContest(Long contestId,Long userId ){
+        if (contestRepository.exists(contestId) && userRepository.exists(userId) && !existContestUser(contestId,userId)){
+            Contest contest = contestRepository.findOne(contestId);
+            User user = userRepository.findOne(userId);
+            Player player = new Player();
+            player.setUser(user);
+            player.setContest(contest);
+            return playerService.addPlayer(player);
+        }
+        return null;
+    }
+
+    public void deleteUserFromContest(Long contestId, Long userId){
+        if (contestRepository.exists(contestId) && userRepository.exists(userId) && existContestUser(contestId,userId)){
+            Contest contest = contestRepository.findOne(contestId);
+            User user = userRepository.findOne(userId);
+            Player player = playerService.getPlayerByUserIdAndContestId(user.getId(),contest.getId());
+            contest.getPlayers().remove(player);
+            contestRepository.save(contest);
+            playerService.deletePlayer(player.getId());
+        }
+    }
+
 
 }

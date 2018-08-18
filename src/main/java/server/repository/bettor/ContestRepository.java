@@ -9,4 +9,5 @@ import java.util.Set;
 
 public interface ContestRepository extends JpaRepository<Contest, Long> {
     Set<Contest> findAllByType(ContestType type);
+
 }

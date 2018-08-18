@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@EqualsAndHashCode(exclude={"season","score","competition"})
+@EqualsAndHashCode(exclude={"season","score","competition","homeTeam","awayTeam"})
 @Table(name = "FIXTURE")
 public class Match {
 
