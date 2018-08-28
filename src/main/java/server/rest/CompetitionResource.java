@@ -49,11 +49,11 @@ public class CompetitionResource {
                                                                       @RequestParam(value = "group", required=false) StandingGroup group) {
         return this.competitionResourceDelegate.getAllStandingsOfCompetition(competitionId,type,group);
     }
-/*
+
     @RequestMapping(path = "/api/competition", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateAllCompetition() {
         this.footballDataBatch.feedingJob();
-    }*/
+    }
 
 }
