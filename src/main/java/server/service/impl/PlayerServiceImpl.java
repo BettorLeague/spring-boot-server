@@ -3,10 +3,13 @@ package server.service.impl;
 import org.springframework.stereotype.Service;
 import server.model.bettor.Player;
 import server.model.bettor.Pronostic;
+import server.model.football.Standing;
+import server.model.football.StandingTable;
 import server.repository.bettor.PlayerRepository;
 import server.service.PlayerService;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 @Service
 public class PlayerServiceImpl implements PlayerService{
@@ -18,7 +21,7 @@ public class PlayerServiceImpl implements PlayerService{
 
 
     public Set<Player> getAllByContestId(Long contestId){
-         return this.playerRepository.getAllByContestId(contestId);
+        return sortPlayer(this.playerRepository.getAllByContestId(contestId));
     }
     public Player addPlayer(Player player){
          return this.playerRepository.save(player);
@@ -36,6 +39,8 @@ public class PlayerServiceImpl implements PlayerService{
          this.playerRepository.delete(playerId);
     }
 
-
+    private Set<Player> sortPlayer(Set<Player> players){
+        return new TreeSet<Player>(players);
+    }
 
 }

@@ -1,9 +1,14 @@
-## alpine linux with JRE
-FROM openjdk:8-jre-alpine
+FROM java:openjdk-8-jdk-alpine
 
-## copy the spring jar
-COPY target/*.jar /opt/myApp.jar
+# add directly the jar
+ADD target/*.jar /app.jar
+
+# to create a modification date
+RUN sh -c 'touch /app.jar'
+
+# creates a mount point
+VOLUME /tmp
+
+CMD ["java", "-jar", "/app.jar", "--spring.profiles.active=prod"]
 
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-jar", "/opt/myApp.jar", "--spring.profiles.active=prod"]

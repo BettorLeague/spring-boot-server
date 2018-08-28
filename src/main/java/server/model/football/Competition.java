@@ -57,11 +57,11 @@ public class Competition {
     @JsonIgnore
     private Set<Match> matches = new HashSet<>();
 
-    @ElementCollection(targetClass=StandingStage.class)
+    @ElementCollection(targetClass=StandingStage.class,fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<StandingStage> availableStage = new HashSet<>();
 
-    @ElementCollection(targetClass=StandingGroup.class)
+    @ElementCollection(targetClass=StandingGroup.class,fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<StandingGroup> availableGroup = new HashSet<>();
 

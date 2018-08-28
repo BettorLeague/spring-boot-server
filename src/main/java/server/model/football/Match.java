@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -14,7 +15,7 @@ import java.util.Date;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode(exclude={"season","score","competition","homeTeam","awayTeam"})
 @Table(name = "FIXTURE")
-public class Match {
+public class Match implements Comparable<Match> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,4 +60,26 @@ public class Match {
     @ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private Competition competition;
+
+    @Override
+    public int compareTo(Match other){
+        if(this.matchday != null && other.getMatchday() != null){
+            int matchday = this.matchday.compareTo(other.getMatchday());
+            if (matchday != 0) {
+                return matchday;
+            }
+        }
+        int day = this.utcDate.compareTo(other.getUtcDate());
+        if (day != 0) {
+            return day;
+        }
+        int homeTeam = this.getHomeTeam().getName().compareTo(other.getHomeTeam().getName());
+        if (homeTeam != 0) {
+            return homeTeam;
+        }
+        return this.getAwayTeam().getName().compareTo(other.getAwayTeam().getName());
+    }
+
+
+
 }

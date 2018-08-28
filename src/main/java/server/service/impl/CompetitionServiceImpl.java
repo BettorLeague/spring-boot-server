@@ -8,9 +8,7 @@ import server.repository.football.MatchRepository;
 import server.repository.football.StandingRepository;
 import server.service.CompetitionService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -29,12 +27,18 @@ public class CompetitionServiceImpl implements CompetitionService{
     }
 
     public List<Competition> getAllCompetition(){
-        return this.competitionRepository.findAll();
+        List<Competition> result = this.competitionRepository.findAll();
+        result.forEach(el -> {
+            el.setAvailableGroup(new TreeSet<>(el.getAvailableGroup()));
+        });
+        return result;
     }
 
 
     public Competition getCompetitionById(Long competitionId){
-        return this.competitionRepository.findOne(competitionId);
+        Competition result = this.competitionRepository.findOne(competitionId);
+        result.setAvailableGroup(new TreeSet<>(result.getAvailableGroup()));
+        return result;
     }
 
     public Set<Team> getAllTeamOfCompetition(Long competitionId){
@@ -45,27 +49,26 @@ public class CompetitionServiceImpl implements CompetitionService{
                                                  Integer matchDay,
                                                  StandingStage stage,
                                                  StandingGroup group){
-
         if(matchDay == null && stage == null && group == null){
-            return this.matchRepository.findAllByCompetitionId(competitionId);
+            return sortMatches(this.matchRepository.findAllByCompetitionId(competitionId));
         }else {
             if(matchDay != null){
                 if(stage == null && group == null){
-                    return this.matchRepository.findAllByCompetitionIdAndMatchday(competitionId,matchDay);
+                    return sortMatches(this.matchRepository.findAllByCompetitionIdAndMatchday(competitionId,matchDay));
                 }else if (stage == null){
-                    return this.matchRepository.findAllByCompetitionIdAndMatchdayAndGroup(competitionId,matchDay,group);
+                    return sortMatches(this.matchRepository.findAllByCompetitionIdAndMatchdayAndGroup(competitionId,matchDay,group));
                 }else if( group == null){
-                    return this.matchRepository.findAllByCompetitionIdAndMatchdayAndStage(competitionId,matchDay,stage);
+                    return sortMatches(this.matchRepository.findAllByCompetitionIdAndMatchdayAndStage(competitionId,matchDay,stage));
                 }else {
-                    return this.matchRepository.findAllByCompetitionIdAndMatchdayAndStageAndGroup(competitionId,matchDay,stage,group);
+                    return sortMatches(this.matchRepository.findAllByCompetitionIdAndMatchdayAndStageAndGroup(competitionId,matchDay,stage,group));
                 }
             }else {
                 if(stage == null){
-                    return this.matchRepository.findAllByCompetitionIdAndGroup(competitionId,group);
+                    return sortMatches(this.matchRepository.findAllByCompetitionIdAndGroup(competitionId,group));
                 }else if( group == null){
-                    return this.matchRepository.findAllByCompetitionIdAndStage(competitionId,stage);
+                    return sortMatches(this.matchRepository.findAllByCompetitionIdAndStage(competitionId,stage));
                 }else {
-                    return this.matchRepository.findAllByCompetitionIdAndStageAndGroup(competitionId,stage,group);
+                    return sortMatches(this.matchRepository.findAllByCompetitionIdAndStageAndGroup(competitionId,stage,group));
                 }
             }
         }
@@ -73,18 +76,43 @@ public class CompetitionServiceImpl implements CompetitionService{
     public Set<Standing> getAllStandingsOfCompetition(Long competitionId,
                                                       StandingType type,
                                                       StandingGroup group){
+        Set<Standing> result = null;
         if(type == null && group == null){
-            return this.standingRepository.findAllByCompetitionId(competitionId);
+            result = this.standingRepository.findAllByCompetitionId(competitionId);
+            result.forEach(el -> {
+                el.setTable(sortStanding(el.getTable()));
+            });
+            return result;
         }else {
             if(type == null){
-                return this.standingRepository.findAllByCompetitionIdAndGroup(competitionId,group);
+                result = this.standingRepository.findAllByCompetitionIdAndGroup(competitionId,group);
+                result.forEach(el -> {
+                    el.setTable(sortStanding(el.getTable()));
+                });
+                return result;
             }else if( group == null){
-                return this.standingRepository.findAllByCompetitionIdAndType(competitionId,type);
+                result = this.standingRepository.findAllByCompetitionIdAndType(competitionId,type);
+                result.forEach(el -> {
+                    el.setTable(sortStanding(el.getTable()));
+                });
+                return result;
             }else {
-                return this.standingRepository.findAllByCompetitionIdAndTypeAndGroup(competitionId,type,group);
+                result = this.standingRepository.findAllByCompetitionIdAndTypeAndGroup(competitionId,type,group);
+                result.forEach(el -> {
+                    el.setTable(sortStanding(el.getTable()));
+                });
+                return result;
             }
 
         }
+    }
+
+    private Set<StandingTable> sortStanding(Set<StandingTable> standingTables){
+        return new TreeSet<StandingTable>(standingTables);
+    }
+
+    private Set<Match> sortMatches(Set<Match> matches){
+        return new TreeSet<Match>(matches);
     }
 
 }

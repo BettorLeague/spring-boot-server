@@ -27,6 +27,9 @@ public class Season{
     @Column
     private Long currentMatchday;
 
+    @Column
+    private Long availableMatchDay;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     private Competition competition;

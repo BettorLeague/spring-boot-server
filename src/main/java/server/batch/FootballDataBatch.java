@@ -57,8 +57,8 @@ public class FootballDataBatch {
         this.restTemplate.getInterceptors().add(new RestTemplateInterceptor());
     }
 
-    //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
+    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
+    //@Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
     public void feedingJob(){
         log.warn("Feeding job start 2015");
         updateCompetitionByFootballDataId("2015");
@@ -72,14 +72,14 @@ public class FootballDataBatch {
         log.warn("Feeding job start 2000");
         updateCompetitionByFootballDataId("2000");
         this.pause(1);
-        log.warn("Feeding job start 2001");
-        updateCompetitionByFootballDataId("2001");
-        this.pause(1);
         log.warn("Feeding job start 2019");
         updateCompetitionByFootballDataId("2019");
         this.pause(1);
         log.warn("Feeding job start 2021");
         updateCompetitionByFootballDataId("2021");
+        this.pause(1);
+        log.warn("Feeding job start 2001");
+        updateCompetitionByFootballDataId("2001");
     }
 
     private void updateCompetitionByFootballDataId(String idCompetitionFBD){
@@ -139,7 +139,7 @@ public class FootballDataBatch {
 
         for(Team team: teamsdto){
             if (! teamRepository.existsByName(team.getName()) ){
-                //team.setLogo(this.getLogoFromTeamId(team.getId()));
+                team.setLogo(this.getLogoFromTeamId(team.getId()));
                 Area savedArea = team.getArea();
                 if(areaRepository.existsByName(savedArea.getName())){
                     team.setArea(areaRepository.findByName(savedArea.getName()));
@@ -200,6 +200,10 @@ public class FootballDataBatch {
             savedCompetition.getMatches().add(match);
         }
 
+        //Get the number of match of the season
+        if(savedCompetition.getAvailableStage().contains(StandingStage.REGULAR_SEASON)){
+            savedCompetition.getCurrentSeason().setAvailableMatchDay(this.getMaxMatchDay(savedCompetition.getTeams()));
+        }
         competitionRepository.save(savedCompetition);
 
     }
@@ -207,6 +211,7 @@ public class FootballDataBatch {
     private void updateCompetition(CompetitionDto competitionDto, String idCompetitionFBD){
 
         Competition competitionToUpdate = competitionRepository.findByName(competitionDto.getName());
+        Set<Team> teams = teamRepository.findAllByCompetition(competitionToUpdate);
 
         Set<Season> seasonsdto = competitionDto.getSeasons();
         Set<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
@@ -218,7 +223,6 @@ public class FootballDataBatch {
         competitionToUpdate.getCurrentSeason().setCurrentMatchday(competitionDto.getCurrentSeason().getCurrentMatchday());
         competitionToUpdate.getCurrentSeason().setStartDate(competitionDto.getCurrentSeason().getStartDate());
         competitionToUpdate.getCurrentSeason().setEndDate(competitionDto.getCurrentSeason().getEndDate());
-
         //Mise à jour des standings
 
 
@@ -296,7 +300,7 @@ public class FootballDataBatch {
             case "2001": return "https://upload.wikimedia.org/wikipedia/fr/b/bf/UEFA_Champions_League_logo_2.svg";
             case "2021": return "https://upload.wikimedia.org/wikipedia/fr/f/f2/Premier_League_Logo.svg";
             case "2002": return "https://upload.wikimedia.org/wikipedia/en/d/df/Bundesliga_logo_%282017%29.svg";
-            case "2014": return "https://upload.wikimedia.org/wikipedia/commons/archive/9/92/20171221112945%21LaLiga_Santander.svg";
+            case "2014": return "https://upload.wikimedia.org/wikipedia/fr/2/23/Logo_La_Liga.png";
             case "2019": return "https://upload.wikimedia.org/wikipedia/en/f/f7/LegaSerieAlogoTIM.png";
             case "2000": return "https://upload.wikimedia.org/wikipedia/en/6/67/2018_FIFA_World_Cup.svg";
             default: return null;
@@ -424,6 +428,11 @@ public class FootballDataBatch {
 
 
         }
+    }
+
+    private Long getMaxMatchDay(Set<Team> teams){
+        log.warn("NOMBRE D EQUIPE : "+teams.size());
+        return new Long((teams.size() - 1) * 2);
     }
 
 }

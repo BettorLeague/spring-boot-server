@@ -20,10 +20,7 @@ import server.service.PlayerService;
 import server.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Objects.nonNull;
 
@@ -80,7 +77,7 @@ public class ContestServiceImpl implements ContestService {
     }
 
     public Set<Player> getPlayersByContestId(Long contestId){
-        if (contestRepository.exists(contestId)) return contestRepository.findOne(contestId).getPlayers();
+        if (contestRepository.exists(contestId)) return sortPlayer(contestRepository.findOne(contestId).getPlayers());
         else return new HashSet<>();
     }
 
@@ -128,6 +125,12 @@ public class ContestServiceImpl implements ContestService {
             contestRepository.save(contest);
             playerService.deletePlayer(player.getId());
         }
+    }
+
+
+
+    private Set<Player> sortPlayer(Set<Player> players){
+        return new TreeSet<Player>(players);
     }
 
 

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode(exclude={"team"})
-public class StandingTable {
+public class StandingTable implements Comparable<StandingTable>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,4 +52,10 @@ public class StandingTable {
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
     private Standing standing;
+
+
+    @Override
+    public int compareTo(StandingTable other) {
+        return Integer.compare(this.position, other.position);
+    }
 }

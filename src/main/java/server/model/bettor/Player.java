@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import server.model.football.StandingTable;
 import server.model.user.User;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @EqualsAndHashCode(exclude={"user","pronostics"})
-public class Player {
+public class Player implements Comparable<Player> {
 
     @Id
     @Column
@@ -50,5 +51,9 @@ public class Player {
     @Column(name = "EXACT_PRONOSTIC")
     private int exactPronostic;
 
+    @Override
+    public int compareTo(Player other) {
+        return Integer.compare(other.points,this.points);
+    }
 
 }
