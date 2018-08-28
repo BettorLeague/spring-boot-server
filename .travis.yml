@@ -30,8 +30,8 @@ after_success:
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - export IMAGE_NAME=bettor-league-api
   - docker build -t $IMAGE_NAME:$COMMIT .
-  - docker tag $IMAGE_NAME:$COMMIT nadjim/$IMAGE_NAME:$TAG
-  - docker push nadjim/$IMAGE_NAME
+  - docker tag $IMAGE_NAME:$COMMIT $DOCKER_USER/$IMAGE_NAME:$TAG
+  - docker push $DOCKER_USER/$IMAGE_NAME
   - sshpass -p $DEPLOY_PASS ssh -o stricthostkeychecking=no $DEPLOY_USER@$DEPLOY_HOST bash $DEPLOY_PATH/deploy.sh
 
 #deploy:
