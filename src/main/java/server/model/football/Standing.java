@@ -30,7 +30,7 @@ public class Standing {
     @Column(name = "GROUPE")
     private StandingGroup group;
 
-    @OneToMany(mappedBy="standing",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="standing",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<StandingTable> table = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

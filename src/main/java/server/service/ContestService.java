@@ -16,22 +16,11 @@ public interface ContestService {
     Contest addContest(ContestRequest contest, HttpServletRequest request);
     Contest getContestById(Long contestId);
     void deleteContest(Long contestId);
+
     Set<Player>  getPlayersByContestId(Long contestId);
     Set<Message> getMessagesByContestId(Long contestId);
 
     boolean existContestUser(Long contestId,Long userId);
     Player addUserToContest(Long contestId, Long userId);
     void deleteUserFromContest(Long contestId,Long userId);
-    /*
-
-    Player getPlayerByContestIdAndPlayerId(Long contestId,Long playerId);
-    Player deletePlayerFromContest(Long contestId,Long playerId);
-
-    Contest addContest(Contest contest);
-    Contest deleteContest(Long contestId);
-
-    List<Contest> getContestPlayedByUser(Long userId);
-
-
-    boolean existContest(Long contestId);*/
 }

@@ -12,19 +12,29 @@ import server.model.bettor.Contest;
 import server.model.bettor.ContestType;
 import server.model.bettor.Message;
 import server.model.bettor.Player;
+import server.repository.bettor.PlayerRepository;
 import server.service.ContestService;
+import server.service.PlayerService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Component
 public class ContestResourceDelegate {
 
     private final ContestService contestService;
+    private final PlayerService playerService;
+    private final PlayerRepository playerRepository;
 
-    public ContestResourceDelegate(ContestService contestService){
+    public ContestResourceDelegate(ContestService contestService,
+                                   PlayerRepository playerRepository,
+                                   PlayerService playerService){
         this.contestService = contestService;
+        this.playerRepository  = playerRepository;
+        this.playerService = playerService;
     }
 
     public ResponseEntity<Set<Contest>> getAllContest(ContestType type) {
@@ -46,10 +56,10 @@ public class ContestResourceDelegate {
         this.contestService.deleteContest(contestId);
     }
 
-    public ResponseEntity<Set<Player>> getPlayersByContestId( Long contestId) {
-        Set<Player> result = this.contestService.getPlayersByContestId(contestId);
+    public ResponseEntity<List<Player>> getPlayersByContestId( Long contestId) {
+        List<Player> result = this.playerService.getAllByContestId(contestId);
         if (result == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(this.contestService.getPlayersByContestId(contestId), HttpStatus.OK);
+        else return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     public ResponseEntity<Set<Message>> getMessagesByContestId(Long contestId) {
@@ -57,6 +67,5 @@ public class ContestResourceDelegate {
         if (result == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(this.contestService.getMessagesByContestId(contestId), HttpStatus.OK);
     }
-
 
 }

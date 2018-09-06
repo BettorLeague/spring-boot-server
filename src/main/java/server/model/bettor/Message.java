@@ -23,6 +23,7 @@ public class Message {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
     @NotNull
     private Player player;
 

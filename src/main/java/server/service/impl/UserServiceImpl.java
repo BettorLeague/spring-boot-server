@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import server.dto.user.UpdateUserInfoRequest;
 import server.model.bettor.Contest;
+import server.model.bettor.ContestType;
 import server.model.bettor.Player;
 import server.model.user.AuthorityName;
 import server.model.user.User;
@@ -158,12 +159,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }else return null;
     }
 
-    public Set<Contest> getContests(Long userId){
+    public Set<Contest> getContests(ContestType type,Long userId){
         if(userRepository.exists(userId)){
             Set<Player> players = userRepository.findOne(userId).getPlayers();
             Set<Contest> contests = new HashSet<>();
             players.forEach(player -> {
-                contests.add(player.getContest());
+                if(type == null){
+                    contests.add(player.getContest());
+                }else{
+                    if(player.getContest().getType().equals(type)){
+                        contests.add(player.getContest());
+                    }
+                }
             });
             return contests;
         }else return null;

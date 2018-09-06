@@ -18,6 +18,10 @@ public class Season{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    @JsonIgnore
+    private Long fbdId;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
 
@@ -29,6 +33,9 @@ public class Season{
 
     @Column
     private Long availableMatchDay;
+
+    @Column
+    private Long availableMatchPerDay;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

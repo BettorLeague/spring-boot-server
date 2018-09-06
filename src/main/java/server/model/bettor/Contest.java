@@ -13,33 +13,32 @@ import server.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "CONTEST")
+@Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@EqualsAndHashCode(exclude={"owner","competition","players","messages"})
 public class Contest {
 
     @Id
-    @Column(name = "ID")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "CAPTION")
+    @Column
     @NotNull
     private String caption;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
     private User owner;
 
-    @Column(name = "TYPE", length = 50)
+    @Column
     @NotNull
     @Enumerated(EnumType.STRING)
     private ContestType type;
@@ -47,13 +46,16 @@ public class Contest {
     @ManyToOne(fetch = FetchType.LAZY)
     private Competition competition;
 
-    @OneToMany(mappedBy="contest",cascade = CascadeType.ALL)
+    @Column
+    private int numberOfPlayers = 1;
+
+    @OneToMany(mappedBy="contest",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Player> players = new HashSet<>();
+    private List<Player> players = new ArrayList<>();
 
     @OneToMany(mappedBy="contest",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Message> messages = new HashSet<>();
+    private List<Message> messages = new ArrayList<>();
 
 
 

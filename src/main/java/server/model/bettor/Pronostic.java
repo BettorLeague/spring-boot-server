@@ -27,6 +27,7 @@ public class Pronostic {
     private Match match;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
     @Column
@@ -34,7 +35,6 @@ public class Pronostic {
 
     @Column
     private int goalsHomeTeam;
-
 
 
 }

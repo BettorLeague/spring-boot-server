@@ -30,6 +30,7 @@ public class ContestServiceImpl implements ContestService {
     private String tokenHeader;
 
     private final ContestRepository contestRepository;
+    private final PlayerRepository playerRepository;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final PlayerService playerService;
@@ -39,7 +40,9 @@ public class ContestServiceImpl implements ContestService {
                               UserRepository userRepository,
                               JwtTokenUtil jwtTokenUtil,
                               PlayerService playerService,
+                              PlayerRepository playerRepository,
                               CompetitionRepository competitionRepository){
+        this.playerRepository = playerRepository;
         this.contestRepository = contestRepository;
         this.playerService = playerService;
         this.userRepository = userRepository;
@@ -77,7 +80,7 @@ public class ContestServiceImpl implements ContestService {
     }
 
     public Set<Player> getPlayersByContestId(Long contestId){
-        if (contestRepository.exists(contestId)) return sortPlayer(contestRepository.findOne(contestId).getPlayers());
+        if (contestRepository.exists(contestId)) return new TreeSet<>(playerRepository.findAllByContestId(contestId));
         else return new HashSet<>();
     }
 
@@ -92,7 +95,7 @@ public class ContestServiceImpl implements ContestService {
     }
 
     public Set<Message> getMessagesByContestId(Long contestId){
-        if (contestRepository.exists(contestId)) return this.contestRepository.findOne(contestId).getMessages();
+        if (contestRepository.exists(contestId)) return new HashSet<>(this.contestRepository.findOne(contestId).getMessages());
         else return new HashSet<>();
     }
 
@@ -111,7 +114,11 @@ public class ContestServiceImpl implements ContestService {
             Player player = new Player();
             player.setUser(user);
             player.setContest(contest);
-            return playerService.addPlayer(player);
+            contest.setNumberOfPlayers(contest.getNumberOfPlayers() + 1 );
+            player = playerService.addPlayer(player);
+            contest.getPlayers().add(player);
+            contestRepository.save(contest);
+            return player;
         }
         return null;
     }
@@ -122,6 +129,7 @@ public class ContestServiceImpl implements ContestService {
             User user = userRepository.findOne(userId);
             Player player = playerService.getPlayerByUserIdAndContestId(user.getId(),contest.getId());
             contest.getPlayers().remove(player);
+            if (contest.getNumberOfPlayers() > 0) contest.setNumberOfPlayers(contest.getNumberOfPlayers() - 1 );
             contestRepository.save(contest);
             playerService.deletePlayer(player.getId());
         }

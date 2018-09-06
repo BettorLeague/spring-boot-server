@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import server.dto.contest.MessageRequest;
 import server.model.bettor.Message;
 import server.model.bettor.Player;
 import server.model.bettor.Pronostic;
@@ -47,6 +48,17 @@ public class PlayerResourceDelegate {
         if(playerRepository.existsByUserIdAndContestId(user.getId(),contestId)){
             Player player = playerRepository.findByUserIdAndContestId(user.getId(),contestId);
             return new ResponseEntity<>(this.playerService.getPronostics(player.getId()),HttpStatus.OK);
+        }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+
+    public ResponseEntity<Message> postMessage(MessageRequest messageRequest, Long contestId, HttpServletRequest request){
+        String token = request.getHeader(tokenHeader);
+        User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
+
+        if(playerRepository.existsByUserIdAndContestId(user.getId(),contestId)){
+            Player player = playerRepository.findByUserIdAndContestId(user.getId(),contestId);
+            return new ResponseEntity<>(this.playerService.postMessage(messageRequest,contestId,player.getId()),HttpStatus.OK);
         }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

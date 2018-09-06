@@ -80,10 +80,10 @@ public class UserResourceDelegate {
         User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
         return new ResponseEntity<>(userService.getPlayers(user.getId()), HttpStatus.OK);
     }
-    public ResponseEntity<Set<Contest>> getContests(HttpServletRequest request){
+    public ResponseEntity<Set<Contest>> getContests(ContestType type,HttpServletRequest request){
         String token = request.getHeader(tokenHeader);
         User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
-        return new ResponseEntity<>(userService.getContests(user.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getContests(type,user.getId()), HttpStatus.OK);
     }
 
     public ResponseEntity<Player> subscribeContest(Long contestId,HttpServletRequest request) {

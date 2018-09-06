@@ -17,6 +17,7 @@ import server.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -57,7 +58,7 @@ public class ContestResource {
 
     @RequestMapping(path = "/api/contest/{contestId}/players", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Set<Player>> getPlayersByContestId(@PathVariable("contestId") Long contestId) {
+    public ResponseEntity<List<Player>> getPlayersByContestId(@PathVariable("contestId") Long contestId) {
         return this.contestResourceDelegate.getPlayersByContestId(contestId);
     }
 

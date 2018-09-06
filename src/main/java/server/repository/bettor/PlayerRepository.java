@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-    Set<Player> getAllByContestId(Long contestId);
+    List<Player> findAllByContestId(Long contestId);
 
 
     Player findByUserId(Long userId);

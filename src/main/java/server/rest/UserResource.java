@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import server.dto.user.*;
 import server.model.bettor.Contest;
+import server.model.bettor.ContestType;
 import server.model.bettor.Player;
 import server.model.user.User;
 
@@ -54,8 +55,9 @@ public class UserResource {
 
     @RequestMapping(path = "/api/user/contest", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Set<Contest>> getContests(HttpServletRequest request) {
-        return userResourceDelegate.getContests(request);
+    public ResponseEntity<Set<Contest>> getContests(@RequestParam(value = "type", required=false) ContestType type,
+                                                    HttpServletRequest request) {
+        return userResourceDelegate.getContests(type,request);
     }
 
     @RequestMapping(path = "/api/user/contest/{contestId}", method = RequestMethod.POST)
