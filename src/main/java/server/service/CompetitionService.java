@@ -7,15 +7,15 @@ import java.util.Set;
 
 public interface CompetitionService {
 
-    List<Competition> getAllCompetition();
-
     Competition getCompetitionById(Long competitionId);
 
-    Set<Team> getAllTeamOfCompetition(Long competitionId);
+    List<Competition> getAllCompetition();
 
-    Set<Match> getAllMatchesOfCompetition(Long competitionId, Integer matchDay, StandingStage stage, StandingGroup group);
+    List<Team> getAllTeamOfCompetition(Long competitionId);
 
-    Set<Standing> getAllStandingsOfCompetition(Long competitionId,StandingType type, StandingGroup group);
+    List<Match> getAllMatchesOfCompetition(Long competitionId, Integer matchDay, StandingStage stage, StandingGroup group);
+
+    List<Standing> getAllStandingsOfCompetition(Long competitionId,StandingType type, StandingGroup group);
 
 
 }

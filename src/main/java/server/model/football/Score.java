@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@EqualsAndHashCode(exclude={"match"})
 public class Score {
 
     @Id

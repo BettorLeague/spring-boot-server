@@ -5,21 +5,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import server.model.football.*;
 
 import java.util.List;
-import java.util.Set;
+import java.util.List;
 
 
 public interface StandingRepository extends JpaRepository<Standing, Long> {
 
-    Set<Standing> findAllByCompetitionId(Long competitionId);
+    List<Standing> findAllByCompetitionId(Long competitionId);
 
-    Set<Standing> findAllByCompetitionIdAndType(Long competitionId,StandingType type);
-    Set<Standing> findAllByCompetitionIdAndTypeAndStage(Long competitionId,StandingType type,StandingStage stage);
-    Set<Standing> findAllByCompetitionIdAndTypeAndGroup(Long competitionId,StandingType type,StandingGroup group);
-    Set<Standing> findAllByCompetitionIdAndTypeAndStageAndGroup(Long competitionId, StandingType type, StandingStage stage, StandingGroup group);
+    List<Standing> findAllByCompetitionIdAndType(Long competitionId,StandingType type);
+    List<Standing> findAllByCompetitionIdAndTypeAndStage(Long competitionId,StandingType type,StandingStage stage);
+    List<Standing> findAllByCompetitionIdAndTypeAndGroup(Long competitionId,StandingType type,StandingGroup group);
+    List<Standing> findAllByCompetitionIdAndTypeAndStageAndGroup(Long competitionId, StandingType type, StandingStage stage, StandingGroup group);
 
 
-    Set<Standing> findAllByCompetitionIdAndStage(Long competitionId,StandingStage stage);
-    Set<Standing> findAllByCompetitionIdAndGroup(Long competitionId,StandingGroup group);
-    Set<Standing> findAllByCompetitionIdAndStageAndGroup(Long competitionId, StandingStage stage, StandingGroup group);
+    List<Standing> findAllByCompetitionIdAndStage(Long competitionId,StandingStage stage);
+    List<Standing> findAllByCompetitionIdAndGroup(Long competitionId,StandingGroup group);
+    List<Standing> findAllByCompetitionIdAndStageAndGroup(Long competitionId, StandingStage stage, StandingGroup group);
 
 }

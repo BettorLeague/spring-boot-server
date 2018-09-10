@@ -12,15 +12,12 @@ import java.util.Set;
 
 public interface ContestService {
 
-    Set<Contest> getAllContest(ContestType type);
     Contest addContest(ContestRequest contest, HttpServletRequest request);
+    Contest deleteContest(Long contestId);
     Contest getContestById(Long contestId);
-    void deleteContest(Long contestId);
 
-    Set<Player>  getPlayersByContestId(Long contestId);
-    Set<Message> getMessagesByContestId(Long contestId);
-
-    boolean existContestUser(Long contestId,Long userId);
-    Player addUserToContest(Long contestId, Long userId);
-    void deleteUserFromContest(Long contestId,Long userId);
+    List<Contest> getAllContest(Long userId,ContestType type);
+    List<Contest> getAllContest(ContestType type);
+    List<Player>  getPlayersInContest(Long contestId);
+    List<Message> getMessagesInContest(Long contestId);
 }

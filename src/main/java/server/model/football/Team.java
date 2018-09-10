@@ -7,14 +7,10 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
-@EqualsAndHashCode(exclude={"competition"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Team {
 
@@ -58,7 +54,7 @@ public class Team {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "teams")
     @JsonIgnore
-    private Set<Competition> competition = new HashSet<>();
+    private List<Competition> competition = new ArrayList<>();
 
 
 

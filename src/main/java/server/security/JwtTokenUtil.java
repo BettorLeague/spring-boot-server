@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import server.model.user.User;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.function.Function;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenUtil implements Serializable {
 
+
+    @Value("${jwt.header}")
+    private String tokenHeader;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -62,7 +66,6 @@ public class JwtTokenUtil implements Serializable {
                 .setExpiration(new Date(System.currentTimeMillis() + expiration*1000))
                 .compact();
     }
-
 
     public Boolean validateToken(String token, User user) {
         final String username = getUsernameFromToken(token);

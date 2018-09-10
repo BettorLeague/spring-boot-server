@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface PlayerService {
+    List<Player> getAllByUser(Long userId);
     List<Player> getAllByContestId(Long contestId);
     Player addPlayer(Player player);
     Player getPlayerByUserIdAndContestId(Long userId,Long contestId);
@@ -17,4 +18,9 @@ public interface PlayerService {
     void deletePlayer(Long playerId);
 
     Message postMessage(MessageRequest message, Long contestId, Long playerId);
+
+    boolean isUserPlayingContest(Long userId,Long contestId);
+
+    Player subscribeToContest(Long userId,Long contestId);
+    Player unSubscribe(Long userId,Long contestId);
 }

@@ -3,17 +3,17 @@ package server.model.football;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@EqualsAndHashCode(exclude={"seasons","currentSeason","standings","teams","matches"})
 public class Competition {
 
     @Id
@@ -40,29 +40,31 @@ public class Competition {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "competition")
     @JsonIgnore
-    private Set<Season> seasons = new HashSet<>();
+    private List<Season> seasons = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "competition_teams",
             joinColumns = { @JoinColumn(name = "competition_id") },
             inverseJoinColumns = { @JoinColumn(name = "team_id") })
     @JsonIgnore
-    private Set<Team> teams = new HashSet<>();
+    private List<Team> teams = new ArrayList<>();
 
     @OneToMany(mappedBy="competition",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Standing> standings = new HashSet<>();
+    private List<Standing> standings = new ArrayList<>();
 
     @OneToMany(mappedBy="competition",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Match> matches = new HashSet<>();
+    private List<Match> matches = new ArrayList<>();
 
-    @ElementCollection(targetClass=StandingStage.class,fetch = FetchType.EAGER)
+    @ElementCollection(targetClass=StandingStage.class)
     @Enumerated(EnumType.STRING)
-    private Set<StandingStage> availableStage = new HashSet<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<StandingStage> availableStage = new ArrayList<>();
 
-    @ElementCollection(targetClass=StandingGroup.class,fetch = FetchType.EAGER)
+    @ElementCollection(targetClass=StandingGroup.class)
     @Enumerated(EnumType.STRING)
-    private Set<StandingGroup> availableGroup = new HashSet<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<StandingGroup> availableGroup = new ArrayList<>();
 
 }

@@ -23,24 +23,6 @@ public class UserResource {
         this.userResourceDelegate = userResourceDelegate;
     }
 
-    @RequestMapping(path = "/api/user/info", method = RequestMethod.PATCH)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<User> updateUserInfo(@RequestBody UpdateUserInfoRequest user, HttpServletRequest request) {
-        return userResourceDelegate.updateUser(user,request);
-    }
-
-    @RequestMapping(path = "/api/user/email", method = RequestMethod.PATCH)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> updateUserEmail(@RequestBody UpdateUserEmailRequest user, HttpServletRequest request) {
-        return new ResponseEntity<>("not implemented", HttpStatus.OK);
-    }
-
-    @RequestMapping(path = "/api/user/password", method = RequestMethod.PATCH)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> updatePassword(@RequestBody UpdateUserPasswordRequest user, HttpServletRequest request) {
-        return new ResponseEntity<>("not implemented", HttpStatus.OK);
-    }
-
     @RequestMapping(path = "/api/user", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<User> deleteAccount(HttpServletRequest request) {
@@ -49,13 +31,13 @@ public class UserResource {
 
     @RequestMapping(path = "/api/user/players", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Set<Player>> getPlayers(HttpServletRequest request) {
+    public ResponseEntity<List<Player>> getPlayers(HttpServletRequest request) {
         return userResourceDelegate.getPlayers(request);
     }
 
     @RequestMapping(path = "/api/user/contest", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Set<Contest>> getContests(@RequestParam(value = "type", required=false) ContestType type,
+    public ResponseEntity<List<Contest>> getContests(@RequestParam(value = "type", required=false) ContestType type,
                                                     HttpServletRequest request) {
         return userResourceDelegate.getContests(type,request);
     }
@@ -68,38 +50,11 @@ public class UserResource {
 
     @RequestMapping(path = "/api/user/contest/{contestId}", method = RequestMethod.PATCH)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> unSubscribeContest(@PathVariable("contestId") Long contestId,HttpServletRequest request) {
+    public ResponseEntity<Player> unSubscribeContest(@PathVariable("contestId") Long contestId,HttpServletRequest request) {
         return userResourceDelegate.unSubscribeContest(contestId,request);
     }
 
-/*
-    @RequestMapping(path = "/api/user/stats", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserStatsResponse> getUserStats(HttpServletRequest request) {
-        return userResourceDelegate.getUserStats(request);
-    }
 
-
-    @RequestMapping(path = "/api/user/contest", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Contest> addPrivateContest(@RequestBody PrivateContestRequest privateContestRequest, HttpServletRequest request) {
-        return userResourceDelegate.addPrivateContest(privateContestRequest,request);
-    }
-
-
-    @RequestMapping(path = "/api/user/contest/{contestId}", method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Contest> deletePrivateContest(@PathVariable("contestId") Long contestId,HttpServletRequest request) {
-        return userResourceDelegate.deletePrivateContest(contestId,request);
-    }
-
-
-
-    @RequestMapping(path = "/api/user/contest/{contestId}/{playerId}", method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Player> deletePlayerFromContest(@PathVariable("contestId") Long contestId,@PathVariable("playerId") Long playerId,HttpServletRequest request) {
-        return userResourceDelegate.deletePlayerFromContest(contestId,playerId,request);
-    }*/
 
 
 }

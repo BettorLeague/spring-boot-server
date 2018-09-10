@@ -8,7 +8,7 @@ import server.model.football.*;
 import server.service.CompetitionService;
 
 import java.util.List;
-import java.util.Set;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -28,15 +28,15 @@ public class CompetitionResourceDelegate {
         return new ResponseEntity<>(this.competitionService.getCompetitionById(competitionId),HttpStatus.OK);
     }
 
-    public ResponseEntity<Set<Team>> getAllTeamOfCompetition(Long competitionId){
+    public ResponseEntity<List<Team>> getAllTeamOfCompetition(Long competitionId){
         return new ResponseEntity<>(this.competitionService.getAllTeamOfCompetition(competitionId),HttpStatus.OK);
     }
 
-    public ResponseEntity<Set<Match>> getAllMatchesOfCompetition(Long competitionId, Integer matchDay, StandingStage stage, StandingGroup group){
+    public ResponseEntity<List<Match>> getAllMatchesOfCompetition(Long competitionId, Integer matchDay, StandingStage stage, StandingGroup group){
         return new ResponseEntity<>(this.competitionService.getAllMatchesOfCompetition(competitionId,matchDay,stage,group),HttpStatus.OK);
     }
 
-    public ResponseEntity<Set<Standing>> getAllStandingsOfCompetition(Long competitionId,StandingType type, StandingGroup group){
+    public ResponseEntity<List<Standing>> getAllStandingsOfCompetition(Long competitionId,StandingType type, StandingGroup group){
         return new ResponseEntity<>(this.competitionService.getAllStandingsOfCompetition(competitionId,type,group),HttpStatus.OK);
     }
 }

@@ -10,6 +10,7 @@ import server.model.football.StandingTable;
 import server.repository.bettor.ContestRepository;
 import server.repository.bettor.MessageRepository;
 import server.repository.bettor.PlayerRepository;
+import server.repository.user.UserRepository;
 import server.service.PlayerService;
 
 import java.util.*;
@@ -19,11 +20,13 @@ public class PlayerServiceImpl implements PlayerService{
      private final PlayerRepository playerRepository;
      private final MessageRepository messageRepository;
      private final ContestRepository contestRepository;
-
+     private final UserRepository userRepository;
      public PlayerServiceImpl(PlayerRepository playerRepository,
                               ContestRepository contestRepository,
+                              UserRepository userRepository,
                               MessageRepository messageRepository){
          this.playerRepository = playerRepository;
+         this.userRepository = userRepository;
          this.contestRepository = contestRepository;
          this.messageRepository = messageRepository;
      }
@@ -55,6 +58,33 @@ public class PlayerServiceImpl implements PlayerService{
          newMessage.setDate(new Date());
          newMessage.setContest(contestRepository.findOne(contestId));
          return this.messageRepository.save(newMessage);
+    }
+
+    public List<Player> getAllByUser(Long userId){
+         return this.playerRepository.findAllByUserId(userId);
+    }
+
+
+    public boolean isUserPlayingContest(Long userId,Long contestId){
+         return this.playerRepository.existsByUserIdAndContestId(userId,contestId);
+    }
+
+    public Player subscribeToContest(Long userId,Long contestId){
+         if(!isUserPlayingContest(userId,contestId)){
+             Player player = new Player();
+             player.setUser(userRepository.findOne(userId));
+             player.setContest(contestRepository.findOne(contestId));
+             player = playerRepository.save(player);
+             return player;
+         }else return null;
+    }
+
+    public Player unSubscribe(Long userId,Long contestId){
+         if(isUserPlayingContest(userId,contestId)){
+             Player player = playerRepository.findByUserIdAndContestId(userId,contestId);
+             playerRepository.delete(player.getId());
+             return player;
+         }else return null;
     }
 
 }

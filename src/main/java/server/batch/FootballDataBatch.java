@@ -10,8 +10,8 @@ import server.model.football.*;
 import server.repository.football.*;
 
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -51,7 +51,7 @@ public class FootballDataBatch {
         this.restTemplate.getInterceptors().add(new RestTemplateInterceptor());
     }
 
-    @Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
+    //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
     //@Scheduled(fixedRate = 1000 * 60 * 60 * 24)// 24 heures
     public void feedingJob(){
 
@@ -98,10 +98,10 @@ public class FootballDataBatch {
     private void createCompetition(CompetitionDto competitiondto, String idCompetitionFBD) {
 
         Area areadto = competitiondto.getArea();
-        Set<Season> seasonsdto = competitiondto.getSeasons();
-        Set<Team> teamsdto = this.getTeamsByFootballDataId(idCompetitionFBD);
-        Set<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
-        Set<MatchDto> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
+        List<Season> seasonsdto = competitiondto.getSeasons();
+        List<Team> teamsdto = this.getTeamsByFootballDataId(idCompetitionFBD);
+        List<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
+        List<MatchDto> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
 
         Competition savedCompetition = new Competition();
         savedCompetition.setName(competitiondto.getName());
@@ -147,7 +147,7 @@ public class FootballDataBatch {
                 }
 
                 team.setId(null);
-                team.setCompetition(new HashSet<>());
+                team.setCompetition(new ArrayList<>());
                 team.getCompetition().add(savedCompetition);
                 savedCompetition.getTeams().add(team);
             }
@@ -155,9 +155,9 @@ public class FootballDataBatch {
 
 
         for(Standing standing: standingsdto){
-            Set<StandingTable> tablesbuffer = standing.getTable();
+            List<StandingTable> tablesbuffer = standing.getTable();
             standing.setId(null);
-            standing.setTable(new HashSet<>());
+            standing.setTable(new ArrayList<>());
             standing.setCompetition(savedCompetition);
             if(standing.getGroup() != null && this.parseGroupe(standing.getGroup().toString()) != null ) standing.setGroup(parseGroupe(standing.getGroup().toString()));
             standing.setStage(parseStage(standing.getStage().toString()));
@@ -168,7 +168,9 @@ public class FootballDataBatch {
                 standing.getTable().add(table);
             }
             savedCompetition.getStandings().add(standing);
-            savedCompetition.getAvailableGroup().add(standing.getGroup());
+            if (! savedCompetition.getAvailableGroup().contains(standing.getGroup())) {
+                savedCompetition.getAvailableGroup().add(standing.getGroup());
+            }
         }
 
 
@@ -188,8 +190,9 @@ public class FootballDataBatch {
             match.getScore().setMatch(match);
             match.setLastUpdated(matchesDto.getLastUpdated());
             match.setCompetition(savedCompetition);
-
-            savedCompetition.getAvailableStage().add(match.getStage());
+            if(!savedCompetition.getAvailableStage().contains(match.getStage())){
+                savedCompetition.getAvailableStage().add(match.getStage());
+            }
             savedCompetition.getMatches().add(match);
         }
 
@@ -206,13 +209,13 @@ public class FootballDataBatch {
 
         Competition competitionToUpdate = competitionRepository.findByName(competitionDto.getName());
         Season seasonToUpdate = seasonRepository.findOne(competitionToUpdate.getCurrentSeason().getId());
-        Set<Team> teams = teamRepository.findAllByCompetition(competitionToUpdate);
-        Set<Standing> standingsToUpdate = standingRepository.findAllByCompetitionId(competitionToUpdate.getId());
+        List<Team> teams = teamRepository.findAllByCompetition(competitionToUpdate);
+        List<Standing> standingsToUpdate = standingRepository.findAllByCompetitionId(competitionToUpdate.getId());
 
-        Set<Season> seasonsdto = competitionDto.getSeasons();
-        Set<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
-        Set<MatchDto> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
-        Set<Team> teamsDto = this.getTeamsByFootballDataId(idCompetitionFBD);
+        List<Season> seasonsdto = competitionDto.getSeasons();
+        List<Standing> standingsdto = this.getStandingsByFootballDataId(idCompetitionFBD);
+        List<MatchDto> matchesdto = this.getMatchessByFootballDataId(idCompetitionFBD);
+        List<Team> teamsDto = this.getTeamsByFootballDataId(idCompetitionFBD);
 
 
         log.info("Competition à update : {}",competitionToUpdate.getName());
@@ -236,9 +239,9 @@ public class FootballDataBatch {
         });
 
         for(Standing standing: standingsdto){
-            Set<StandingTable> tablesbuffer = standing.getTable();
+            List<StandingTable> tablesbuffer = standing.getTable();
             standing.setId(null);
-            standing.setTable(new HashSet<>());
+            standing.setTable(new ArrayList<>());
             standing.setCompetition(competitionToUpdate);
             if(standing.getGroup() != null && this.parseGroupe(standing.getGroup().toString()) != null ) standing.setGroup(parseGroupe(standing.getGroup().toString()));
             standing.setStage(parseStage(standing.getStage().toString()));
@@ -271,7 +274,7 @@ public class FootballDataBatch {
                         team.setArea(null);
                     }
                 }
-                team.setCompetition(new HashSet<>());
+                team.setCompetition(new ArrayList<>());
                 Team newTeam = teamRepository.save(team);
                 team.getCompetition().add(competitionToUpdate);
                 competitionToUpdate.getTeams().add(newTeam);
@@ -313,7 +316,7 @@ public class FootballDataBatch {
 
 
     private Season getTheLastSeason(Competition competition) throws ParseException{
-        Set<Season> seasons = competition.getSeasons();
+        List<Season> seasons = competition.getSeasons();
         if (seasons.size() > 0 ){
             Season lastSeason = seasons.iterator().next();
             log.info("Saison date : {}",lastSeason.getEndDate().toString());
@@ -328,17 +331,17 @@ public class FootballDataBatch {
         return null;
     }
 
-    private Set<Standing> getStandingsByFootballDataId(String idCompetitionFBD){
+    private List<Standing> getStandingsByFootballDataId(String idCompetitionFBD){
         StandingsDto standingsDto = restTemplate.getForObject(BASE_API_V2_URL + "competitions/"+ idCompetitionFBD + "/standings", StandingsDto.class);
         return standingsDto.getStandings();
     }
 
-    private Set<Team> getTeamsByFootballDataId(String idCompetitionFBD){
+    private List<Team> getTeamsByFootballDataId(String idCompetitionFBD){
         TeamsDto teamsDto = restTemplate.getForObject(BASE_API_V2_URL + "competitions/"+ idCompetitionFBD + "/teams", TeamsDto.class);
         return teamsDto.getTeams();
     }
 
-    private Set<MatchDto> getMatchessByFootballDataId(String idCompetitionFBD){
+    private List<MatchDto> getMatchessByFootballDataId(String idCompetitionFBD){
         MatchesDto matchesDto = restTemplate.getForObject(BASE_API_V2_URL + "competitions/"+ idCompetitionFBD + "/matches", MatchesDto.class);
         return matchesDto.getMatches();
     }
@@ -368,7 +371,7 @@ public class FootballDataBatch {
 
     }
 
-    private Team getTeamFromName(Set<Team> teams,String teamName){
+    private Team getTeamFromName(List<Team> teams, String teamName){
         Team result = teamRepository.findByName(teamName);
         for (Team team: teams){
             log.info("SEARCHING TEAM : "+teamName+"CURRENT TEAM :"+team.getName());
@@ -475,12 +478,12 @@ public class FootballDataBatch {
         }
     }
 
-    private Long getMaxMatchDay(Set<Team> teams){
+    private Long getMaxMatchDay(List<Team> teams){
         log.warn("NOMBRE D EQUIPE : "+teams.size());
         return new Long((teams.size() - 1) * 2);
     }
 
-    private Long getMatchPerDay(Set<Team> teams){
+    private Long getMatchPerDay(List<Team> teams){
         log.warn("NOMBRE DE MATCH PAR JOURNEE : "+teams.size());
         return new Long(teams.size() / 2) ;
     }
@@ -504,7 +507,7 @@ public class FootballDataBatch {
             team.setLogo(getLogoFromTeamId(team.getId()));
             if (team.getArea() != null) team.setArea(saveArea(team.getArea()));
             else team.setArea(null);
-            team.setCompetition(new HashSet<>());
+            team.setCompetition(new ArrayList<>());
             result = teamRepository.save(team);
         }
         return result;
@@ -562,9 +565,9 @@ public class FootballDataBatch {
         return result;
     }
     private Standing saveStanding(Standing standing){
-        Set<StandingTable> standingTables = standing.getTable();
+        List<StandingTable> standingTables = standing.getTable();
         standing.setId(null);
-        standing.setTable(new HashSet<>());
+        standing.setTable(new ArrayList<>());
         if(standing.getGroup() != null && this.parseGroupe(standing.getGroup().toString()) != null ){
             standing.setGroup(parseGroupe(standing.getGroup().toString()));
         }

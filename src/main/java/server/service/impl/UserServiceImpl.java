@@ -1,5 +1,6 @@
 package server.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,8 +17,10 @@ import server.repository.user.UserRepository;
 import server.model.user.Authority;
 import server.dto.authentification.SignupRequest;
 import server.repository.football.TeamRepository;
+import server.security.JwtTokenUtil;
 import server.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,16 +29,23 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+
+    @Value("${jwt.header}")
+    private String tokenHeader;
+
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final TeamRepository teamRepository;
+    private final JwtTokenUtil jwtTokenUtil;
 
     public UserServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
                            TeamRepository teamRepository,
+                           JwtTokenUtil jwtTokenUtil,
                            AuthorityRepository authorityRepository){
         this.authorityRepository = authorityRepository;
+        this.jwtTokenUtil = jwtTokenUtil;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.teamRepository = teamRepository;
@@ -57,6 +67,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
     public User getUser(Long id) {
         return userRepository.findOne(id);
+    }
+    public User getUser(HttpServletRequest request){
+        String token = request.getHeader(tokenHeader);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        return this.userRepository.findByEmailOrUsername(username,username);
     }
     public User deleteUser(Long id) {
         User user = userRepository.findOne(id);
@@ -152,33 +167,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 
     }
-
-    public Set<Player> getPlayers(Long userId){
-        if(userRepository.exists(userId)){
-            return userRepository.findOne(userId).getPlayers();
-        }else return null;
-    }
-
-    public Set<Contest> getContests(ContestType type,Long userId){
-        if(userRepository.exists(userId)){
-            Set<Player> players = userRepository.findOne(userId).getPlayers();
-            Set<Contest> contests = new HashSet<>();
-            players.forEach(player -> {
-                if(type == null){
-                    contests.add(player.getContest());
-                }else{
-                    if(player.getContest().getType().equals(type)){
-                        contests.add(player.getContest());
-                    }
-                }
-            });
-            return contests;
-        }else return null;
-    }
-
-
-
-
 
 
 }

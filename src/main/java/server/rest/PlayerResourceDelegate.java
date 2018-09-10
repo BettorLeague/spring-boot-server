@@ -61,4 +61,14 @@ public class PlayerResourceDelegate {
             return new ResponseEntity<>(this.playerService.postMessage(messageRequest,contestId,player.getId()),HttpStatus.OK);
         }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    public ResponseEntity<Player> getPlayer(Long contestId, HttpServletRequest request){
+        String token = request.getHeader(tokenHeader);
+        User user = userService.getUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
+
+        if(playerRepository.existsByUserIdAndContestId(user.getId(),contestId)){
+            Player player = playerRepository.findByUserIdAndContestId(user.getId(),contestId);
+            return new ResponseEntity<>(player,HttpStatus.OK);
+        }else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }

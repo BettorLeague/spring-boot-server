@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import server.dto.contest.MessageRequest;
 import server.model.bettor.Message;
+import server.model.bettor.Player;
 import server.model.bettor.Pronostic;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,5 +37,11 @@ public class PlayerResource {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Message> postMessage(@RequestBody MessageRequest messageRequest, @PathVariable("contestId") Long contestId , HttpServletRequest request) {
         return playerResourceDelegate.postMessage(messageRequest,contestId,request);
+    }
+
+    @RequestMapping(path = "/api/player/contest/{contestId}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Player> getPlayer(@PathVariable("contestId") Long contestId , HttpServletRequest request) {
+        return playerResourceDelegate.getPlayer(contestId,request);
     }
 }

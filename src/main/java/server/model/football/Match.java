@@ -13,7 +13,6 @@ import java.util.Date;
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@EqualsAndHashCode(exclude={"season","score","competition","homeTeam","awayTeam"})
 @Table(name = "FIXTURE")
 public class Match implements Comparable<Match> {
 
@@ -45,10 +44,10 @@ public class Match implements Comparable<Match> {
     @Enumerated(EnumType.STRING)
     private StandingGroup group;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Team homeTeam;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Team awayTeam;
 
     @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
@@ -57,7 +56,8 @@ public class Match implements Comparable<Match> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
-    @ManyToOne(cascade=CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "competition_id", nullable = false)
     @JsonIgnore
     private Competition competition;
 

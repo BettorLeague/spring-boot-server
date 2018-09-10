@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@EqualsAndHashCode(exclude={"team"})
 public class StandingTable implements Comparable<StandingTable>{
 
     @Id
@@ -49,7 +48,8 @@ public class StandingTable implements Comparable<StandingTable>{
     @Column()
     private int goalDifference;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,optional = false)
+    @JoinColumn(name = "standing_id", nullable = false)
     @JsonIgnore
     private Standing standing;
 

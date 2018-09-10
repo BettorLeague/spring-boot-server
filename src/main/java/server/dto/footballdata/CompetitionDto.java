@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import server.model.football.*;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,8 +21,8 @@ public class CompetitionDto {
     private Date lastUpdated;
     private Area area;
     private Season currentSeason;
-    private Set<Season> seasons;
-    private Set<Team> teams;
-    private Set<Standing> standings;
-    private Set<Match> matches;
+    private List<Season> seasons;
+    private List<Team> teams;
+    private List<Standing> standings;
+    private List<Match> matches;
 }

@@ -10,7 +10,6 @@ import java.util.Date;
 
 @Data
 @Entity
-@EqualsAndHashCode(exclude={"competition"})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Season{
 
@@ -37,7 +36,8 @@ public class Season{
     @Column
     private Long availableMatchPerDay;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "competition_id", nullable = false)
     @JsonIgnore
     private Competition competition;
 }

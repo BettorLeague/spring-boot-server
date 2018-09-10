@@ -3,18 +3,16 @@ package server.model.football;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import server.model.bettor.Player;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@EqualsAndHashCode(exclude={"table"})
-public class Standing {
+public class Standing implements Comparable<Standing>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,9 +29,22 @@ public class Standing {
     private StandingGroup group;
 
     @OneToMany(mappedBy="standing",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<StandingTable> table = new HashSet<>();
+    private List<StandingTable> table = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "competition_id", nullable = false)
     @JsonIgnore
     private Competition competition;
+
+    @Override
+    public int compareTo(Standing other) {
+        if(this.getGroup() != null && other.getGroup() != null){
+            int group = this.group.compareTo(other.getGroup());
+            if (group != 0) {
+                return group;
+            }
+        }
+        return 1;
+    }
+
 }
