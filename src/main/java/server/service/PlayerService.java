@@ -13,7 +13,7 @@ public interface PlayerService {
     List<Player> getAllByContestId(Long contestId);
     Player addPlayer(Player player);
     Player getPlayerByUserIdAndContestId(Long userId,Long contestId);
-    Set<Pronostic> getPronostics(Long playerId);
+    List<Pronostic> getPronostics(Long playerId);
 
     void deletePlayer(Long playerId);
 
@@ -23,4 +23,6 @@ public interface PlayerService {
 
     Player subscribeToContest(Long userId,Long contestId);
     Player unSubscribe(Long userId,Long contestId);
+
+    Pronostic savePronostic(Pronostic pronostic);
 }

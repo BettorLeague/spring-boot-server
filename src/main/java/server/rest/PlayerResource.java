@@ -23,14 +23,14 @@ public class PlayerResource {
 
     @RequestMapping(path = "/api/player/contest/{contestId}/pronostic", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Set<Pronostic>> getPronostics(@PathVariable("contestId") Long contestId , HttpServletRequest request) {
+    public ResponseEntity<List<Pronostic>> getPronostics(@PathVariable("contestId") Long contestId , HttpServletRequest request) {
         return playerResourceDelegate.getPronostics(contestId,request);
     }
 
     @RequestMapping(path = "/api/player/contest/{contestId}/pronostic", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Pronostic>> upadtePronostic(@RequestBody List<Pronostic> pronostics, @PathVariable("contestId") Long contestId ,HttpServletRequest request) {
-        return null;
+        return playerResourceDelegate.updatePronostics(contestId,pronostics,request);
     }
 
     @RequestMapping(path = "/api/player/contest/{contestId}/message", method = RequestMethod.POST)
