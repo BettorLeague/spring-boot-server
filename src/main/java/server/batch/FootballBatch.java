@@ -63,7 +63,7 @@ public class FootballBatch {
 
 
     //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
-    @Scheduled(fixedRate = 1000 * 60 * 60 )// 24 heures
+    @Scheduled(fixedRate = 1000 * 60 * 10 )// 1 heure
     public void fetchFootballData(){
 
         log.warn("Début du batch de récupération");
