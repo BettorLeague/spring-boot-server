@@ -22,7 +22,7 @@ import static server.model.football.StandingStage.REGULAR_SEASON;
 @Transactional
 public class FootballBatch {
 
-    private final List<String> competitions = Arrays.asList("2015","2001"/*,"2000","2002","2014","2019","2021"*/);
+    private final List<String> competitions = Arrays.asList("2015","2001","2000","2002","2014","2019","2021");
     private RestTemplate restTemplate;
     private ModelMapper modelMapper;
 
