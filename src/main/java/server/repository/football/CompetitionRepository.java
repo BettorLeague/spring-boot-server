@@ -6,6 +6,8 @@ import server.model.football.Season;
 
 
 public interface CompetitionRepository extends JpaRepository<Competition, Long> {
+    boolean existsByName(String name);
+
     Competition findByName(String name);
     Competition findByCode(String code);
     Competition findByCurrentSeason(Season season);

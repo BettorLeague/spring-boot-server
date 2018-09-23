@@ -52,9 +52,12 @@ public class Team {
     @Column
     private String clubColors;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "teams")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "team_competition",
+            joinColumns = { @JoinColumn(name = "tem_id") },
+            inverseJoinColumns = { @JoinColumn(name = "competition_id") })
     @JsonIgnore
-    private List<Competition> competition = new ArrayList<>();
+    private List<Competition> competitions = new ArrayList<>();
 
 
 

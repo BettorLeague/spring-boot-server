@@ -48,7 +48,7 @@ public class StandingTable implements Comparable<StandingTable>{
     @Column()
     private int goalDifference;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY,optional = false)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "standing_id", nullable = false)
     @JsonIgnore
     private Standing standing;

@@ -74,27 +74,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return this.userRepository.findByEmailOrUsername(username,username);
     }
     public User deleteUser(Long id) {
-        User user = userRepository.findOne(id);
-        userRepository.delete(id);
-        return user;
-    }
-    public User addUser(User user) {
-        return userRepository.save(user);
-    }
-    public User updateUserInfo(User user, UpdateUserInfoRequest userInfoRequest){
-        User current = userRepository.findOne(user.getId());
-        current.setUsername(userInfoRequest.getUsername());
-        current.setBirthDate(userInfoRequest.getBirthDate());
-        current.setCountry(userInfoRequest.getCountry());
-        current.setFavoriteTeam(teamRepository.findOne(userInfoRequest.getFavoriteTeamId()));
-        current.setSex(userInfoRequest.getSex());
-        return this.userRepository.save(current);
+        if(userRepository.exists(id)){
+            User user = userRepository.findOne(id);
+            userRepository.delete(id);
+            return user;
+        }else {
+            return null;
+        }
     }
 
-
-    public List<Authority> getAllAuthority() {
-        return this.authorityRepository.findAll();
-    }
 
     public User getUserByEmail(String email){
         return this.userRepository.findByEmail(email);

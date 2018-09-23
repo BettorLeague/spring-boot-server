@@ -1,22 +1,12 @@
 package server.batch;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-import server.dto.footballdata.*;
-import server.model.football.*;
-import server.repository.football.*;
-
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @Slf4j
 public class FootballDataBatch {
-
+/*
     private final static String BASE_API_V2_URL = "http://api.football-data.org/v2/";
     private final static String BASE_API_V1_URL = "http://api.football-data.org/v1/";
 
@@ -581,5 +571,5 @@ public class FootballDataBatch {
         return standingRepository.save(standing);
     }
 
-
+*/
 }

@@ -11,6 +11,6 @@ import java.util.Set;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
     Team findByName(String name);
-    List<Team> findAllByCompetition(Competition competition);
+    List<Team> findAllByCompetitions(Competition competition);
     boolean existsByName(String name);
 }

@@ -1,4 +1,4 @@
-package server.batch;
+package server.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +21,8 @@ public class RestTemplateInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         HttpHeaders headers = request.getHeaders();
-        headers.add("X-Auth-Token", "27daafb5ac6742b4a7ab34b2ae44e12a");
+        //headers.add("X-Auth-Token", "27daafb5ac6742b4a7ab34b2ae44e12a");
+        headers.add("X-Auth-Token", "1d2d673e7f5044d69f76d04ffdb11eba");
         return execution.execute(request, body);
     }
 

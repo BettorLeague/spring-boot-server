@@ -1,4 +1,4 @@
-package server.dto.footballdata;
+package server.dto.football;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -13,5 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StandingsDto {
-    private List<Standing> standings;
+    private List<StandingDto> standings;
 }

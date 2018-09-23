@@ -42,10 +42,7 @@ public class Competition {
     @JsonIgnore
     private List<Season> seasons = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "competition_teams",
-            joinColumns = { @JoinColumn(name = "competition_id") },
-            inverseJoinColumns = { @JoinColumn(name = "team_id") })
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "competitions")
     @JsonIgnore
     private List<Team> teams = new ArrayList<>();
 

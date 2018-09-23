@@ -7,16 +7,13 @@ import server.batch.FootballDataBatch;
 import server.model.football.*;
 
 import java.util.List;
-import java.util.List;
 
 @RestController
 public class CompetitionResource {
 
     private final CompetitionResourceDelegate competitionResourceDelegate;
-    private final FootballDataBatch footballDataBatch;
 
-    public CompetitionResource(CompetitionResourceDelegate competitionResourceDelegate, FootballDataBatch footballDataBatch){
-        this.footballDataBatch = footballDataBatch;
+    public CompetitionResource(CompetitionResourceDelegate competitionResourceDelegate){
         this.competitionResourceDelegate = competitionResourceDelegate;
     }
 
@@ -33,6 +30,11 @@ public class CompetitionResource {
     @RequestMapping(path = "/api/competition/{competitionId}/teams", method = RequestMethod.GET)
     public ResponseEntity<List<Team>> getAllTeamOfCompetition(@PathVariable("competitionId") Long competitionId) {
         return this.competitionResourceDelegate.getAllTeamOfCompetition(competitionId);
+    }
+
+    @RequestMapping(path = "/api/competition/{competitionId}/teams/{teamId}", method = RequestMethod.GET)
+    public ResponseEntity<List<Match>> getlast5TeamMatch(@PathVariable("competitionId") Long competitionId,@PathVariable("teamId") Long teamId) {
+        return this.competitionResourceDelegate.getlast5TeamMatch(competitionId,teamId);
     }
 
     @RequestMapping(path = "/api/competition/{competitionId}/matches", method = RequestMethod.GET)
@@ -53,7 +55,7 @@ public class CompetitionResource {
     @RequestMapping(path = "/api/competition", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateAllCompetition() {
-        this.footballDataBatch.feedingJob();
+
     }
 
 }

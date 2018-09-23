@@ -1,4 +1,4 @@
-package server.dto.footballdata;
+package server.dto.football;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -17,12 +17,9 @@ public class CompetitionDto {
     private Long id;
     private String name;
     private String code;
-    private String logo;
+    private String plan;
     private Date lastUpdated;
-    private Area area;
+    private AreaDto area;
     private Season currentSeason;
     private List<Season> seasons;
-    private List<Team> teams;
-    private List<Standing> standings;
-    private List<Match> matches;
 }

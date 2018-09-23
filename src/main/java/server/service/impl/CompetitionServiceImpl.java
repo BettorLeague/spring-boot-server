@@ -37,7 +37,7 @@ public class CompetitionServiceImpl implements CompetitionService{
         return this.competitionRepository.findOne(competitionId);
     }
     public List<Team> getAllTeamOfCompetition(Long competitionId){
-        return this.teamRepository.findAllByCompetition(this.competitionRepository.findOne(competitionId));
+        return this.teamRepository.findAllByCompetitions(this.competitionRepository.findOne(competitionId));
     }
     public List<Match> getAllMatchesOfCompetition(Long competitionId, Integer matchDay, StandingStage stage, StandingGroup group){
         List<Match> matches = new ArrayList<>();

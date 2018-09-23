@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface StandingRepository extends JpaRepository<Standing, Long> {
 
+    boolean existsByCompetitionId(Long competitionId);
+
     List<Standing> findAllByCompetitionId(Long competitionId);
 
     List<Standing> findAllByCompetitionIdAndType(Long competitionId,StandingType type);
@@ -22,4 +24,5 @@ public interface StandingRepository extends JpaRepository<Standing, Long> {
     List<Standing> findAllByCompetitionIdAndGroup(Long competitionId,StandingGroup group);
     List<Standing> findAllByCompetitionIdAndStageAndGroup(Long competitionId, StandingStage stage, StandingGroup group);
 
+    void deleteAllByCompetitionId(Long competitionId);
 }
