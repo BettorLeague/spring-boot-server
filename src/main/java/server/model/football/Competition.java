@@ -13,6 +13,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "COMPETITION")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Competition {
 
