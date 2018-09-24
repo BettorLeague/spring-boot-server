@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "CONTEST")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,26 +27,29 @@ import java.util.Set;
 public class Contest {
 
     @Id
-    @Column
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "CAPTION")
     @NotNull
     private String caption;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="OWNER_ID")
     private User owner;
 
-    @Column
+    @Column(name = "TYPE")
     @NotNull
     @Enumerated(EnumType.STRING)
     private ContestType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="COMPETITION_ID")
     private Competition competition;
 
-    @Column
+    @Column(name = "NUMBER_OF_PLAYERS")
     private int numberOfPlayers = 1;
 
     @OneToMany(mappedBy="contest",cascade = CascadeType.ALL,fetch = FetchType.LAZY)

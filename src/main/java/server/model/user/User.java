@@ -78,6 +78,7 @@ public class User  {
     private UserSex sex;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="FAVORITE_TEAM_ID")
     private Team favoriteTeam;
 
     @Column(name = "QUOTE")

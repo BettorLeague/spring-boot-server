@@ -11,30 +11,31 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table
+@Table(name = "MESSAGE")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
 
     @Id
-    @Column
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "player_id", nullable = false)
+    @JoinColumn(name = "PLAYER_ID", nullable = false)
     @NotNull
     private Player player;
 
-    @Column
+    @Column(name = "DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @Column
+    @Column(name = "CONTENT")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="CONTEST_ID")
     @JsonIgnore
     private Contest contest;
 

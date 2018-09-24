@@ -11,17 +11,21 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "STANDING")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Standing implements Comparable<Standing>{
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "STAGE")
     private StandingStage stage;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE")
     private StandingType type;
 
     @Enumerated(EnumType.STRING)
@@ -32,7 +36,7 @@ public class Standing implements Comparable<Standing>{
     private List<StandingTable> table = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "competition_id", nullable = false)
+    @JoinColumn(name = "COMPETITION_ID", nullable = false)
     @JsonIgnore
     private Competition competition;
 

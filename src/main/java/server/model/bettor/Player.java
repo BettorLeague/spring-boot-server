@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table
+@Table(name = "PLAYER")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,16 +25,17 @@ import java.util.Set;
 public class Player implements Comparable<Player> {
 
     @Id
-    @Column
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="USER_ID")
     @NotNull
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "contest_id", nullable = false)
+    @JoinColumn(name = "CONTEST_ID", nullable = false)
     @NotNull
     @JsonIgnore
     private Contest contest;

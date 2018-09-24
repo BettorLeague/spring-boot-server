@@ -313,7 +313,7 @@ public class FootballBatch {
         if (competition.getAvailableStage().contains(REGULAR_SEASON)){
             Season season = seasonRepository.findOne(competition.getCurrentSeason().getId());
             season.setAvailableMatchPerDay(getMatchPerDay(teams));
-            season.setAvailableMatchDay(getMaxMatchDay(teams));
+            season.setAvailableMatchday(getMaxMatchDay(teams));
             season = seasonRepository.save(season);
         }
         competition = competitionRepository.save(competition);

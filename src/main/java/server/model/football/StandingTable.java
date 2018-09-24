@@ -10,10 +10,12 @@ import javax.persistence.*;
 
 @Data
 @Entity
+@Table(name = "STANDING_TABLE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StandingTable implements Comparable<StandingTable>{
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
@@ -21,35 +23,35 @@ public class StandingTable implements Comparable<StandingTable>{
     @OneToOne
     private Team team;
 
-    @Column()
+    @Column(name = "POSITION")
     private int position;
 
-    @Column()
+    @Column(name = "PLAYED_GAMES")
     private int playedGames;
 
-    @Column()
+    @Column(name = "WON")
     private int won;
 
-    @Column()
+    @Column(name = "DRAW")
     private int draw;
 
-    @Column()
+    @Column(name = "LOST")
     private int lost;
 
-    @Column()
+    @Column(name = "POINTS")
     private int points;
 
-    @Column()
+    @Column(name = "GOALS_FOR")
     private int goalsFor;
 
-    @Column()
+    @Column(name = "GOALS_AGAINST")
     private int goalsAgainst;
 
-    @Column()
+    @Column(name = "GOAL_DIFFERENCE")
     private int goalDifference;
 
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "standing_id", nullable = false)
+    @JoinColumn(name = "STANDING_ID", nullable = false)
     @JsonIgnore
     private Standing standing;
 

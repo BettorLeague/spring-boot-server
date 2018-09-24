@@ -11,10 +11,12 @@ import java.util.*;
 
 @Data
 @Entity
+@Table(name = "TEAM")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Team {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -22,40 +24,40 @@ public class Team {
     private Area area;
 
     @NotNull
-    @Column(unique = true)
+    @Column(unique = true,name = "NAME")
     private String name;
 
-    @Column
+    @Column(name = "SHORT_NAME")
     private String shortName;
 
-    @Column
+    @Column(name = "TLA")
     private String tla;
 
-    @Column
+    @Column(name = "ADDRESS")
     private String address;
 
-    @Column
+    @Column(name = "PHONE")
     private String phone;
 
-    @Column
+    @Column(name = "WEBSITE")
     private String website;
 
-    @Column
+    @Column(name = "EMAIL")
     private String email;
 
-    @Column
+    @Column(name = "LOGO")
     private String logo;
 
-    @Column
+    @Column(name = "FOUNDED")
     private Long founded;
 
-    @Column
+    @Column(name = "CLUB_COLORS")
     private String clubColors;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "team_competition",
-            joinColumns = { @JoinColumn(name = "tem_id") },
-            inverseJoinColumns = { @JoinColumn(name = "competition_id") })
+    @JoinTable(name = "TEAM_COMPETITION",
+            joinColumns = { @JoinColumn(name = "TEAM_ID") },
+            inverseJoinColumns = { @JoinColumn(name = "COMPETITION_ID") })
     @JsonIgnore
     private List<Competition> competitions = new ArrayList<>();
 

@@ -17,27 +17,30 @@ import java.util.Date;
 public class Match implements Comparable<Match> {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "FBD_ID")
     @JsonIgnore
     private Long fbdId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="SEASON_ID")
     private Season season;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DATE")
     private Date utcDate;
 
-    @Column
+    @Column(name="STATUS")
     private String status;
 
-    @Column
+    @Column(name="MATCHDAY")
     private Integer matchday;
 
     @Enumerated(EnumType.STRING)
+    @Column(name="STANDING_STAGE")
     private StandingStage stage;
 
     @Column(name = "GROUPE")
@@ -45,19 +48,23 @@ public class Match implements Comparable<Match> {
     private StandingGroup group;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name="HOME_TEAM_ID")
     private Team homeTeam;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name="AWAY_TEAM_ID")
     private Team awayTeam;
 
     @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name="SCORE_ID")
     private Score score;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED")
     private Date lastUpdated;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "competition_id", nullable = false)
+    @JoinColumn(name = "COMPETITION_ID", nullable = false)
     @JsonIgnore
     private Competition competition;
 

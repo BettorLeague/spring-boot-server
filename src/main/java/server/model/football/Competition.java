@@ -18,32 +18,36 @@ import java.util.List;
 public class Competition {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "NAME",unique = true)
     private String name;
 
-    @Column
+    @Column(name = "CODE")
     private String code;
 
-    @Column
+    @Column(name = "LOGO")
     private String logo;
 
+    @Column(name = "DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="AREA_ID")
     private Area area;
 
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="CURRENT_SEASON_ID")
     private Season currentSeason;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "competition")
+    @OneToMany(mappedBy = "competition",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Season> seasons = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "competitions")
+    @ManyToMany(mappedBy = "competitions",fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Team> teams = new ArrayList<>();
 
@@ -58,11 +62,15 @@ public class Competition {
     @ElementCollection(targetClass=StandingStage.class)
     @Enumerated(EnumType.STRING)
     @LazyCollection(LazyCollectionOption.FALSE)
+    @CollectionTable(name = "COMPETITION_AVAILABLE_STAGE", joinColumns = @JoinColumn(name = "COMPETITION_ID"))
+    @Column(name = "AVAILABLE_STAGE")
     private List<StandingStage> availableStage = new ArrayList<>();
 
     @ElementCollection(targetClass=StandingGroup.class)
     @Enumerated(EnumType.STRING)
     @LazyCollection(LazyCollectionOption.FALSE)
+    @CollectionTable(name = "COMPETITION_AVAILABLE_GROUP", joinColumns = @JoinColumn(name = "COMPETITION_ID"))
+    @Column(name = "AVAILABLE_GROUP")
     private List<StandingGroup> availableGroup = new ArrayList<>();
 
 }

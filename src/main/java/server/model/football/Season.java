@@ -10,34 +10,38 @@ import java.util.Date;
 
 @Data
 @Entity
+@Table(name = "SEASON")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Season{
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "FBD_ID")
     @JsonIgnore
     private Long fbdId;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "START_DATE")
     private Date startDate;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "END_DATE")
     private Date endDate;
 
-    @Column
+    @Column(name = "CURRENT_MATCHDAY")
     private Long currentMatchday;
 
-    @Column
-    private Long availableMatchDay;
+    @Column(name = "AVAILABLE_MATCHDAY")
+    private Long availableMatchday;
 
-    @Column
+    @Column(name = "AVAILABLE_MATCH_PER_DAY")
     private Long availableMatchPerDay;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "competition_id", nullable = false)
+    @JoinColumn(name = "COMPETITION_ID", nullable = false)
     @JsonIgnore
     private Competition competition;
 }

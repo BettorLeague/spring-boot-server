@@ -4,37 +4,38 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import server.model.football.Competition;
 import server.model.football.Match;
-import server.model.football.Score;
-import server.model.user.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
+@Table(name = "PRONOSTIC")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pronostic {
 
     @Id
-    @Column
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
+    @JoinColumn(name="MATCH_ID")
     private Match match;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "player_id", nullable = false)
+    @JoinColumn(name = "PLAYER_ID", nullable = false)
     private Player player;
 
-    @Column
+    @Column(name = "GOALS_AWAY_TEAM")
     private int goalsAwayTeam;
 
-    @Column
+    @Column(name = "GOALS_HOME_TEAM")
     private int goalsHomeTeam;
 
+    @Column(name = "ASSIGNED")
+    @JsonIgnore
+    private boolean assigned = false;
 
 }
