@@ -2,6 +2,7 @@ package server.service.impl;
 
 import org.springframework.stereotype.Service;
 import server.dto.contest.MessageRequest;
+import server.model.bettor.Contest;
 import server.model.bettor.Message;
 import server.model.bettor.Player;
 import server.model.bettor.Pronostic;
@@ -36,24 +37,10 @@ public class PlayerServiceImpl implements PlayerService{
      }
 
 
-    public List<Player> getAllByContestId(Long contestId){
-        return this.playerRepository.findAllByContestId(contestId);
-    }
-    public Player addPlayer(Player player){
-         return this.playerRepository.save(player);
-    }
-
     public List<Pronostic> getPronostics(Long playerId){
          return this.pronosticRepository.findAllByPlayerId(playerId);
     }
 
-    public Player getPlayerByUserIdAndContestId(Long userId,Long contestId){
-         return this.playerRepository.findByUserIdAndContestId(userId,contestId);
-    }
-
-    public void deletePlayer(Long playerId){
-         this.playerRepository.delete(playerId);
-    }
 
     public Message postMessage(MessageRequest message, Long contestId, Long playerId){
          Message newMessage = new Message();
@@ -75,6 +62,9 @@ public class PlayerServiceImpl implements PlayerService{
 
     public Player subscribeToContest(Long userId,Long contestId){
          if(!isUserPlayingContest(userId,contestId)){
+             Contest contest = contestRepository.findOne(contestId);
+             contest.setNumberOfPlayers(contest.getNumberOfPlayers()+1);
+             contestRepository.save(contest);
              Player player = new Player();
              player.setUser(userRepository.findOne(userId));
              player.setContest(contestRepository.findOne(contestId));
@@ -85,6 +75,9 @@ public class PlayerServiceImpl implements PlayerService{
 
     public Player unSubscribe(Long userId,Long contestId){
          if(isUserPlayingContest(userId,contestId)){
+             Contest contest = contestRepository.findOne(contestId);
+             contest.setNumberOfPlayers(contest.getNumberOfPlayers()-1);
+             contestRepository.save(contest);
              Player player = playerRepository.findByUserIdAndContestId(userId,contestId);
              playerRepository.delete(player.getId());
              return player;

@@ -10,12 +10,7 @@ import java.util.Set;
 
 public interface PlayerService {
     List<Player> getAllByUser(Long userId);
-    List<Player> getAllByContestId(Long contestId);
-    Player addPlayer(Player player);
-    Player getPlayerByUserIdAndContestId(Long userId,Long contestId);
     List<Pronostic> getPronostics(Long playerId);
-
-    void deletePlayer(Long playerId);
 
     Message postMessage(MessageRequest message, Long contestId, Long playerId);
 
