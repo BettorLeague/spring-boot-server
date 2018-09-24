@@ -1,9 +1,7 @@
 package server.rest;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import server.batch.FootballDataBatch;
 import server.model.football.*;
 
 import java.util.List;
@@ -52,10 +50,6 @@ public class CompetitionResource {
         return this.competitionResourceDelegate.getAllStandingsOfCompetition(competitionId,type,group);
     }
 
-    @RequestMapping(path = "/api/competition", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateAllCompetition() {
 
-    }
 
 }
