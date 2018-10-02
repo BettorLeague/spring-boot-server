@@ -2,10 +2,7 @@ package server.service.impl;
 
 import org.springframework.stereotype.Service;
 import server.dto.contest.MessageRequest;
-import server.model.bettor.Contest;
-import server.model.bettor.Message;
-import server.model.bettor.Player;
-import server.model.bettor.Pronostic;
+import server.model.bettor.*;
 import server.model.football.Standing;
 import server.model.football.StandingTable;
 import server.repository.bettor.ContestRepository;
@@ -91,5 +88,7 @@ public class PlayerServiceImpl implements PlayerService{
          }else pronostic.setId(null);
          return this.pronosticRepository.save(pronostic);
     }
+
+
 
 }

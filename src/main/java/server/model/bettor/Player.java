@@ -45,13 +45,16 @@ public class Player implements Comparable<Player> {
     private List<Pronostic> pronostics = new ArrayList<>();
 
     @Column(name = "POINTS")
-    private int points;
+    private int points = 0;
 
     @Column(name = "GOOD_PRONOSTIC")
-    private int goodPronostic;
+    private int goodPronostic = 0;
 
     @Column(name = "EXACT_PRONOSTIC")
-    private int exactPronostic;
+    private int exactPronostic = 0;
+
+    @Column(name = "TOTAL_PRONOSTIC")
+    private int totalPronostic = 0;
 
     @OneToMany(mappedBy="player",cascade=CascadeType.ALL,fetch = FetchType.LAZY)
     @JsonIgnore

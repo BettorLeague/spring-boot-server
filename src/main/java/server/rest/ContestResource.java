@@ -5,10 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import server.dto.contest.ContestRequest;
-import server.model.bettor.Contest;
-import server.model.bettor.ContestType;
-import server.model.bettor.Message;
-import server.model.bettor.Player;
+import server.model.bettor.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -52,6 +49,12 @@ public class ContestResource {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Player>> getPlayersByContestId(@PathVariable("contestId") Long contestId) {
         return this.contestResourceDelegate.getPlayersByContestId(contestId);
+    }
+
+    @RequestMapping(path = "/api/contest/{contestId}/standing", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<StandingPlayer>> getStandingContest(@PathVariable("contestId") Long contestId) {
+        return this.contestResourceDelegate.getStandingContest(contestId);
     }
 
     @RequestMapping(path = "/api/contest/{contestId}/messages", method = RequestMethod.GET)

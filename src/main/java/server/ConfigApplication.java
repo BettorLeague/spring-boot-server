@@ -22,6 +22,7 @@ public class ConfigApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         log.warn("Loading data...");
         userService.addAdminAccount();
+        log.warn("Admin account added");
     }
 
 }

@@ -2,10 +2,7 @@ package server.service.impl;
 
 import org.springframework.stereotype.Service;
 import server.dto.contest.ContestRequest;
-import server.model.bettor.Contest;
-import server.model.bettor.ContestType;
-import server.model.bettor.Message;
-import server.model.bettor.Player;
+import server.model.bettor.*;
 import server.model.football.Competition;
 import server.model.user.User;
 import server.repository.bettor.ContestRepository;
@@ -102,6 +99,21 @@ public class ContestServiceImpl implements ContestService {
             });
         }
         return contests;
+    }
+
+
+    public List<StandingPlayer> getStandingContest(Long contestId){
+        List<Player> players = this.playerRepository.findAllByContestIdOrderByPointsDesc(contestId);
+        List<StandingPlayer> result = new ArrayList<>();
+
+        for(int i = 1 ; i < players.size()+1; i++){
+            StandingPlayer standingPlayer = new StandingPlayer();
+            standingPlayer.setPosition(i);
+            standingPlayer.setPlayer(players.get(i -1));
+            result.add(standingPlayer);
+        }
+
+        return result;
     }
 
 

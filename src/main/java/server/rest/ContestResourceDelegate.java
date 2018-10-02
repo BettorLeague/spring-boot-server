@@ -4,10 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import server.dto.contest.ContestRequest;
-import server.model.bettor.Contest;
-import server.model.bettor.ContestType;
-import server.model.bettor.Message;
-import server.model.bettor.Player;
+import server.model.bettor.*;
 import server.service.ContestService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +43,10 @@ public class ContestResourceDelegate {
         List<Player> result = this.contestService.getPlayersInContest(contestId);
         if (result == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<StandingPlayer>> getStandingContest(Long contestId){
+        return new ResponseEntity<>(this.contestService.getStandingContest(contestId),HttpStatus.OK);
     }
 
     public ResponseEntity<List<Message>> getMessagesByContestId(Long contestId) {
