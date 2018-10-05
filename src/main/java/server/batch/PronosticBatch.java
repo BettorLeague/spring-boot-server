@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import server.model.bettor.Player;
 import server.model.bettor.Pronostic;
 import server.model.football.Match;
+import server.model.football.ScoreResult;
 import server.repository.bettor.PlayerRepository;
 import server.repository.bettor.PronosticRepository;
 
@@ -39,13 +40,13 @@ public class PronosticBatch {
                 if(pronostic.getGoalsHomeTeam() == pronostic.getMatch().getScore().getFullTime().getHomeTeam() && pronostic.getGoalsAwayTeam() == pronostic.getMatch().getScore().getFullTime().getAwayTeam()){
                     player.setExactPronostic(player.getExactPronostic()+1);
                     player.setPoints(player.getPoints()+5);
-                }else if(pronostic.getGoalsHomeTeam() > pronostic.getGoalsAwayTeam() && match.getScore().getWinner().equals("HOME_TEAM")){
+                }else if(pronostic.getGoalsHomeTeam() > pronostic.getGoalsAwayTeam() && match.getScore().getWinner().equals(ScoreResult.HOME_TEAM)){
                     player.setGoodPronostic(player.getGoodPronostic()+1);
                     player.setPoints(player.getPoints()+3);
-                }else if (pronostic.getGoalsAwayTeam() > pronostic.getGoalsHomeTeam() && match.getScore().getWinner().equals("AWAY_TEAM")){
+                }else if (pronostic.getGoalsAwayTeam() > pronostic.getGoalsHomeTeam() && match.getScore().getWinner().equals(ScoreResult.AWAY_TEAM)){
                     player.setGoodPronostic(player.getGoodPronostic()+1);
                     player.setPoints(player.getPoints()+3);
-                }else if(pronostic.getGoalsHomeTeam() == pronostic.getGoalsAwayTeam() && match.getScore().getWinner().equals("DRAW")){
+                }else if(pronostic.getGoalsHomeTeam() == pronostic.getGoalsAwayTeam() && match.getScore().getWinner().equals(ScoreResult.DRAW)){
                     player.setGoodPronostic(player.getGoodPronostic()+1);
                     player.setPoints(player.getPoints()+3);
                 }

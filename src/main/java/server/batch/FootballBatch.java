@@ -22,7 +22,7 @@ import static server.model.football.StandingStage.REGULAR_SEASON;
 @Transactional
 public class FootballBatch {
 
-    private final List<String> competitions = Arrays.asList("2015","2001"/*,"2000"*/,"2002","2014","2019","2021");
+    private final List<String> competitions = Arrays.asList("2015", "2001"/*,"2000"*/,"2002","2014","2019","2021","2003","2013","2017");
     private RestTemplate restTemplate;
     private ModelMapper modelMapper;
 
@@ -63,19 +63,20 @@ public class FootballBatch {
 
 
     //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
-    @Scheduled(fixedRate = 1000 * 60 * 8 )// 8 minutes
+    @Scheduled(fixedRate = 1000 * 60  )// 1 minutes
     public void fetchFootballData(){
 
         log.warn("Début du batch de récupération");
 
         for(String competition:competitions){
+
             //update la compétition avec l'id football data org
             log.warn("Début de récupération de la compétition :"+competition);
             updateCompetition(competition);
             log.warn("Fin de la récupération de la compétition "+competition);
 
             //Pause d'une minute entre chaque compétition afin d'éviter une 429
-            pause(1);
+            pause((long) 1);
         }
 
         log.warn("Batch de récupération terminé");
@@ -320,7 +321,7 @@ public class FootballBatch {
 
     }
 
-    private void pause(int minutes){
+    private void pause(Long minutes){
         try{
             Thread.sleep(1000 * 60 * minutes);
         }catch (InterruptedException e) {
@@ -429,6 +430,8 @@ public class FootballBatch {
             case "2014": return "https://upload.wikimedia.org/wikipedia/fr/2/23/Logo_La_Liga.png";
             case "2019": return "https://upload.wikimedia.org/wikipedia/en/f/f7/LegaSerieAlogoTIM.png";
             case "2000": return "https://upload.wikimedia.org/wikipedia/en/6/67/2018_FIFA_World_Cup.svg";
+            case "2003": return "https://upload.wikimedia.org/wikipedia/fr/3/3e/Eredivisie-Logo.svg";
+            case "2017": return "http://www.thefinalball.com/img/logos/edicoes/70079_imgbank_.png";
             default: return null;
         }
     }

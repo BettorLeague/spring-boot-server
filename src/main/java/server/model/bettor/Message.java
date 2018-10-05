@@ -31,7 +31,7 @@ public class Message {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", columnDefinition="TEXT")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
