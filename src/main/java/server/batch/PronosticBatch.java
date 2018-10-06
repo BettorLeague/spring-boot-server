@@ -27,7 +27,7 @@ public class PronosticBatch {
         this.playerRepository = playerRepository;
     }
 
-    @Scheduled(fixedRate = 1000 * 60 )// 1 minute
+    @Scheduled(fixedRate = 1000 * 30 )// 1 minute
     public void updatePlayerScore(){
         log.warn("Update pronostic");
         List<Pronostic> pronostics = pronosticRepository.findAllByAssigned(false);
@@ -37,7 +37,7 @@ public class PronosticBatch {
             if(match.getStatus().equals("FINISHED")){
                 Player player = pronostic.getPlayer();
                 // check exact pronostic
-                if(pronostic.getGoalsHomeTeam() == pronostic.getMatch().getScore().getFullTime().getHomeTeam() && pronostic.getGoalsAwayTeam() == pronostic.getMatch().getScore().getFullTime().getAwayTeam()){
+                if(pronostic.getGoalsHomeTeam().equals(pronostic.getMatch().getScore().getFullTime().getHomeTeam()) && pronostic.getGoalsAwayTeam().equals(pronostic.getMatch().getScore().getFullTime().getAwayTeam())){
                     player.setExactPronostic(player.getExactPronostic()+1);
                     player.setPoints(player.getPoints()+5);
                 }else if(pronostic.getGoalsHomeTeam() > pronostic.getGoalsAwayTeam() && match.getScore().getWinner().equals(ScoreResult.HOME_TEAM)){
@@ -46,13 +46,15 @@ public class PronosticBatch {
                 }else if (pronostic.getGoalsAwayTeam() > pronostic.getGoalsHomeTeam() && match.getScore().getWinner().equals(ScoreResult.AWAY_TEAM)){
                     player.setGoodPronostic(player.getGoodPronostic()+1);
                     player.setPoints(player.getPoints()+3);
-                }else if(pronostic.getGoalsHomeTeam() == pronostic.getGoalsAwayTeam() && match.getScore().getWinner().equals(ScoreResult.DRAW)){
+                }else if(pronostic.getGoalsHomeTeam().equals(pronostic.getGoalsAwayTeam()) && match.getScore().getWinner().equals(ScoreResult.DRAW)){
                     player.setGoodPronostic(player.getGoodPronostic()+1);
                     player.setPoints(player.getPoints()+3);
                 }
 
                 player.setTotalPronostic(player.getTotalPronostic()+1);
                 playerRepository.save(player);
+                pronostic.setAssigned(true);
+                pronosticRepository.save(pronostic);
             }
         }
     }

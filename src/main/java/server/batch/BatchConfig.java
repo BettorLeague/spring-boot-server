@@ -7,6 +7,8 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -32,6 +34,7 @@ import java.util.List;
 @EnableScheduling
 public class BatchConfig {
 
+
     private final List<String> competitions = Arrays.asList("2000", "2001", "2002","2014","2015","2019","2021");
 
     private final JobBuilderFactory jobBuilderFactory;
@@ -52,6 +55,7 @@ public class BatchConfig {
                        TeamRepository teamRepository,
                        SeasonRepository seasonRepository,
                        CompetitionRepository competitionRepository,
+                       RestTemplateInterceptor restTemplateInterceptor,
                        AreaRepository areaRepository){
         this.jobBuilderFactory = jobBuilderFactory;
         this.stepBuilderFactory = stepBuilderFactory;
@@ -62,7 +66,7 @@ public class BatchConfig {
         this.seasonRepository = seasonRepository;
         this.modelMapper = new ModelMapper();
         this.restTemplate = new RestTemplate();
-        this.restTemplate.getInterceptors().add(new RestTemplateInterceptor());
+        this.restTemplate.getInterceptors().add(restTemplateInterceptor);
     }
 
 

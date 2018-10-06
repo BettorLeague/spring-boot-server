@@ -29,10 +29,10 @@ public class Pronostic {
     private Player player;
 
     @Column(name = "GOALS_AWAY_TEAM")
-    private int goalsAwayTeam;
+    private Long goalsAwayTeam;
 
     @Column(name = "GOALS_HOME_TEAM")
-    private int goalsHomeTeam;
+    private Long goalsHomeTeam;
 
     @Column(name = "ASSIGNED")
     @JsonIgnore

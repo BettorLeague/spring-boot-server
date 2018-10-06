@@ -22,8 +22,9 @@ import static server.model.football.StandingStage.REGULAR_SEASON;
 @Transactional
 public class FootballBatch {
 
+
     private final List<String> competitions = Arrays.asList("2015", "2001"/*,"2000"*/,"2002","2014","2019","2021","2003","2013","2017");
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
     private ModelMapper modelMapper;
 
 
@@ -43,6 +44,7 @@ public class FootballBatch {
                          ScoreRepository scoreRepository,
                          TableRepository tableRepository,
                          StandingRepository standingRepository,
+                         RestTemplateInterceptor restTemplateInterceptor,
                          SeasonRepository seasonRepository){
 
         this.competitionRepository = competitionRepository;
@@ -56,14 +58,14 @@ public class FootballBatch {
 
         this.modelMapper = new ModelMapper();
         this.restTemplate = new RestTemplate();
-        this.restTemplate.getInterceptors().add(new RestTemplateInterceptor());
+        this.restTemplate.getInterceptors().add(restTemplateInterceptor);
 
     }
 
 
 
     //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
-    @Scheduled(fixedRate = 1000 * 60  )// 1 minutes
+    @Scheduled(fixedRate = 1000)// 1 milliseconde
     public void fetchFootballData(){
 
         log.warn("Début du batch de récupération");
@@ -76,7 +78,7 @@ public class FootballBatch {
             log.warn("Fin de la récupération de la compétition "+competition);
 
             //Pause d'une minute entre chaque compétition afin d'éviter une 429
-            pause((long) 1);
+            pause((long) 1000 * 30);
         }
 
         log.warn("Batch de récupération terminé");
@@ -321,9 +323,9 @@ public class FootballBatch {
 
     }
 
-    private void pause(Long minutes){
+    private void pause(Long milliSeconde){
         try{
-            Thread.sleep(1000 * 60 * minutes);
+            Thread.sleep(milliSeconde);
         }catch (InterruptedException e) {
             log.warn(e.getMessage());
         }
