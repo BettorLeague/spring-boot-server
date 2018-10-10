@@ -39,6 +39,7 @@ public class PronosticBatch {
                 // check exact pronostic
                 if(pronostic.getGoalsHomeTeam().equals(pronostic.getMatch().getScore().getFullTime().getHomeTeam()) && pronostic.getGoalsAwayTeam().equals(pronostic.getMatch().getScore().getFullTime().getAwayTeam())){
                     player.setExactPronostic(player.getExactPronostic()+1);
+                    player.setGoodPronostic(player.getGoodPronostic()+1);
                     player.setPoints(player.getPoints()+5);
                 }else if(pronostic.getGoalsHomeTeam() > pronostic.getGoalsAwayTeam() && match.getScore().getWinner().equals(ScoreResult.HOME_TEAM)){
                     player.setGoodPronostic(player.getGoodPronostic()+1);

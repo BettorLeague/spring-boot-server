@@ -65,7 +65,7 @@ public class FootballBatch {
 
 
     //@Scheduled(cron = "0 0 0 * * *", zone = "Europe/Paris")// à minuit
-    @Scheduled(fixedRate = 1000)// 1 milliseconde
+    //@Scheduled(fixedRate = 1000)// 1 milliseconde
     public void fetchFootballData(){
 
         log.warn("Début du batch de récupération");
@@ -174,7 +174,7 @@ public class FootballBatch {
 
     private Competition writeCompetition(Competition competition,String competitionId){
 
-        if(!competitionRepository.existsByName(competition.getName())){
+        if(!competitionRepository.existsByCode(competition.getCode())){
 
             log.warn("Nouvelle Competition : "+competition.getName());
 
@@ -433,6 +433,7 @@ public class FootballBatch {
             case "2019": return "https://upload.wikimedia.org/wikipedia/en/f/f7/LegaSerieAlogoTIM.png";
             case "2000": return "https://upload.wikimedia.org/wikipedia/en/6/67/2018_FIFA_World_Cup.svg";
             case "2003": return "https://upload.wikimedia.org/wikipedia/fr/3/3e/Eredivisie-Logo.svg";
+            case "2013": return "https://upload.wikimedia.org/wikipedia/en/4/42/Campeonato_Brasileiro_S%C3%A9rie_A_logo.png";
             case "2017": return "http://www.thefinalball.com/img/logos/edicoes/70079_imgbank_.png";
             default: return null;
         }
