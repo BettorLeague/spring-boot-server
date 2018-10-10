@@ -1,5 +1,6 @@
 database/
 databaseProd/
+logs/
 target/
 !.mvn/wrapper/maven-wrapper.jar
 

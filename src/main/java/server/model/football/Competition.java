@@ -22,10 +22,10 @@ public class Competition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NAME",unique = true)
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "CODE")
+    @Column(name = "CODE",unique = true)
     private String code;
 
     @Column(name = "LOGO")
