@@ -1,23 +1,20 @@
 version: "2"
 services:
-  phpmyadmin:
+  bettor-league-phpmyadmin:
     container_name: bettor-league-phpmyadmin
     image: phpmyadmin/phpmyadmin
-    expose:
-      - "80"
     ports:
       - "8090:80"
     environment:
       - MYSQL_USERNAME=root
       - MYSQL_PASSWORD=root
-      - PMA_ABSOLUTE_URI=http://localhost:8090
     links:
       - database:db
   database:
     container_name: bettor-league-database
     image: mysql:5.7
-    expose:
-      - "3306"
+    ports:
+      - "3306:3306"
     volumes:
       - ./databaseProd:/var/lib/mysql
     environment:
