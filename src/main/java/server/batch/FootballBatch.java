@@ -204,7 +204,7 @@ public class FootballBatch {
 
             log.warn("Mise à jour de la competition : "+competition.getName());
 
-            Competition current = competitionRepository.findByName(competition.getName());
+            Competition current = competitionRepository.findByCode(competition.getCode());
             Season currentSeason = current.getCurrentSeason();
             currentSeason.setCurrentMatchday(competition.getCurrentSeason().getCurrentMatchday());
             seasonRepository.save(currentSeason);
