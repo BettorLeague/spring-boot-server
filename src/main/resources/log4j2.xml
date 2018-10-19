@@ -13,7 +13,7 @@
         <Appender type="File" name="File" fileName="logs/bettor-league.log">
             <Layout type="PatternLayout" pattern="${defaultpattern}" />
         </Appender>
-        <Socket name="socket" host="logstash" port="9999" reconnectionDelayMillis="5000">
+        <Socket name="socket" host="bettor-league-logstash" port="9999" reconnectionDelayMillis="5000">
             <Layout type="PatternLayout" pattern="${defaultpattern}" />
         </Socket>
     </Appenders>
