@@ -12,6 +12,7 @@ import java.util.Date;
 @Entity
 @Table(name = "SEASON")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@EqualsAndHashCode(of = {"id"})
 public class Season{
 
     @Id

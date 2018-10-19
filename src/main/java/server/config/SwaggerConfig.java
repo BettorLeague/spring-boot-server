@@ -45,6 +45,7 @@ public class SwaggerConfig {
                 .paths(PathSelectors.regex("(?!/info).+"))
                 .paths(PathSelectors.regex("(?!/mappings).+"))
                 .paths(PathSelectors.regex("(?!/trace).+"))
+                .paths(PathSelectors.regex("(?!/logfile).+"))
                 .build()
                 .securitySchemes(Collections.singletonList(apiKey()))
                 .securityContexts(Collections.singletonList(securityContext()))
