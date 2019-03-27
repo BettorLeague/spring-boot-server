@@ -10,12 +10,23 @@
         <Appender type="Console" name="STDOUT">
             <Layout type="PatternLayout" pattern="${defaultpattern}"/>
         </Appender>
-        <Appender type="File" name="File" fileName="logs/bettor-league.log">
-            <Layout type="PatternLayout" pattern="${defaultpattern}" />
-        </Appender>
         <Socket name="socket" host="bettor-league-logstash" port="9999" reconnectionDelayMillis="5000">
             <Layout type="PatternLayout" pattern="${defaultpattern}" />
         </Socket>
+
+        <RollingFile name="File"
+                     fileName="logs/bettor-league.log"
+                     filePattern="logs/bettor-league.log">
+            <PatternLayout pattern="${defaultpattern}"/>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches
+                    10 MegaBytes -->
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy
+                        size="10 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>x
+        </RollingFile>
     </Appenders>
 
     <Loggers>
