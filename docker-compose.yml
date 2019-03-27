@@ -10,6 +10,15 @@ services:
       - MYSQL_PASSWORD=root
     links:
       - database:db
+    networks:
+      - bettor-league
+      - default
+    labels:
+      - "traefik.backend=bettor-league-php-admin"
+      - "traefik.docker.network=bettor-league"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:database.bettorleague.ovh"
+      - "traefik.port=80"
   database:
     container_name: bettor-league-database
     image: mysql:5.7
@@ -34,10 +43,18 @@ services:
       - DATABASE_PORT=3306
     depends_on:
       - database
+    networks:
+      - bettor-league
+      - default
     external_links:
       - bettor-league-logstash
+    labels:
+      - "traefik.backend=bettor-league-api"
+      - "traefik.docker.network=bettor-league"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:api.bettorleague.ovh"
+      - "traefik.port=8080"
 
 networks:
-  default:
-    external:
-      name: bettor-league-network
+  bettor-league:
+    external: true
